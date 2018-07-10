@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cn">
+<head>
+    <title>ComboBox</title>
+    <link rel="stylesheet" href="jquery.combobox.css"/>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="jquery.bgiframe.pack.js"></script>
+    <script type="text/javascript" src="jquery.combobox.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var sub = [{
+                "flag": "1",
+                "flmc": "柜台_证件类别",
+                "ibm": "0",
+                "cbm": "0",
+                "fldm": "GT_ZJLB",
+                "type": "0",
+                "note": "身份证"
+            }, {
+                "flag": "1",
+                "flmc": "柜台_证件类别",
+                "ibm": "1",
+                "cbm": "1",
+                "fldm": "GT_ZJLB",
+                "type": "1",
+                "note": "护照"
+            }, {
+                "flag": "1",
+                "flmc": "柜台_证件类别",
+                "ibm": "2",
+                "cbm": "2",
+                "fldm": "GT_ZJLB",
+                "type": "2",
+                "note": "军官证"
+            }];
+            var jQcombo = $('.combo').combobox(
+                    //['china', 'japan', 'usa', 'russia'],  // 列表值  可以是Array 或者 JSON
+                    sub,
+                    {
+                        InpshowId: 'note', //在下拉列表中要显示的字段,这个只对传过去的JSON对象有效
+                        callback: function (data) { //选中后回调函数
+                            $("#ComboboxText").val(data['cbm']);
+                        }
+                    }
+            );
+
+        });
+    </script>
+</head>
+<body>
+
+
+<h2>Demostartion</h2>
+
+<form>
+    <p>
+        <input type="text" name="combo" class="combo" id="combo"/> Combobox 1
+    </p>
+
+    <p><input type="text" id="ComboboxText"/></p>
+
+    <p>
+        <input type="text" name="combo2" class="combo" id="combo2"/> Combobox 2
+    </p>
+
+    <p>
+        <select>
+            <option>1</option>
+            <option>2</option>
+        </select>
+        This is a select box to see if there is a problem in IE.
+    </p>
+    <p><input type="submit" value="A sample submit button"/></p>
+</form>
+
+<h2>Usage</h2>
+
+<h3>Html</h3>
+
+<h3>Script</h3>
+
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>无缝轮播、自动轮播、焦点轮播、左右轮播实例</title>
+</head>
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .nav {
+        width: 500px;
+        height: 274px;
+        margin: 100px auto;
+        border: 5px solid #1111ee;
+        font-family: "宋体";
+        font-size: 50px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .nav .images {
+        width: 4000px;
+        position: absolute;
+        left: 0;
+    }
+
+    .nav .images li {
+        float: left;
+    }
+
+    .nav .num {
+        position: absolute;
+        width: 100%;
+        bottom: 8px;
+        left: 0;
+        text-align: center;
+        font-size: 0px;
+    }
+
+    .nav .num li {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        background-color: dimgrey;
+        border-radius: 50%;
+        cursor: pointer;
+        margin-right: 5px;
+    }
+
+    .nav .num .on {
+        background-color: coral;
+    }
+
+    .nav .btn {
+        width: 40px;
+        height: 60px;
+        background: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 50%;
+        margin-top: -30px;
+        cursor: pointer;
+        text-align: center;
+        line-height: 60px;
+        color: white;
+        display: none;
+    }
+
+    .nav:hover .btn {
+        display: block;
+    }
+
+    .nav .btn_l {
+        left: 0;
+    }
+
+    .nav .btn_r {
+        right: 0;
+    }
+</style>
+<body>
+
+
+<div class="nav">
+    <ul class="images">
+        <li><a href="#"><img src="images/1.jpg"/></a></li>
+        <li><a href="#"><img src="images/2.jpg"/></a></li>
+        <li><a href="#"><img src="images/3.jpg"/></a></li>
+        <li><a href="#"><img src="images/4.jpg"/></a></li>
+        <li><a href="#"><img src="images/5.jpg"/></a></li>
+    </ul>
+    <ul class="num">
+        <li class="on"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <div class="btn btn_l">&lt;</div>
+    <div class="btn btn_r">&gt;</div>
+</div>
+
+<script type="text/javascript" src="jquery-1.9.1.js"></script>
+<script type="text/javascript">
+    var lzImage = (function ($) {
+        var clone = $(".nav .images li").first().clone();
+        $(".nav .images").append(clone);
+        var i = 0;
+        var size = $(".nav .images li").size();
+        //走轮训
+        $(".nav").on('click', '.btn_l', function (event) {
+            var _this = $(event.currentTarget);
+            i--;
+            if (i == -1) {
+                $(".nav .images").css({left: -(size - 1) * 500});
+                i = size - 2;
+            }
+            $(".nav .images").stop().animate({left: -i * 500}, 500);
+            $(".nav .num li").eq(i).addClass("on").siblings().removeClass("on");
+        }).on('click', '.btn_r', function (event) {
+            moveR();
+        });
+
+        $(".nav .num li").hover(function () {
+            var index = $(this).index();
+            i = index;
+            $(".nav .images").stop().animate({left: -i * 500}, 500);
+            $(this).addClass("on").siblings().removeClass("on");
+        });
+
+        var t = setInterval(function () {
+            moveR();
+        }, 1500);
+
+        $('.nav').hover(function () {
+            //停止自动播放
+            clearInterval(t);
+        }, function () {
+            //继续自动播放
+            t = setInterval(function () {
+                moveR();
+            }, 1500);
+        });
+
+
+        function moveR() {
+            i++;
+            if (i == size) {
+                $(".nav .images").css({left: 0});
+                i = 1;
+            }
+            $(".nav .images").stop().animate({left: -i * 500}, 500);
+            if (i == size - 1) {
+                $(".nav .num li").eq(0).addClass("on").siblings().removeClass("on");
+            } else {
+                $(".nav .num li").eq(i).addClass("on").siblings().removeClass("on");
+            }
+        }
+    })(jQuery);
+</script>
+</body>
+</html>

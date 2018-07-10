@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>仿QQ登录页面</title>
+    <style>
+        html, body, h1, h2, h3, h4, p, ul, ol, li, form, input, textarea, section {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #F9F9F9;
+            font-size: 14px;
+            color: #666;
+            font-family: "Microsoft YaHei";
+            line-height: 20px;
+        }
+        .sp_body {
+            height: 100%;
+            background: url(http://www.xuecima.com/images/bg.jpg) 0 0 no-repeat;
+            background-size: 100% 100%;
+        }
+        .section_wrap {
+            min-width: 1200px;
+        }
+        .login_reg .main {
+            background-color: #fff;
+            border-radius: 3px;
+            box-shadow: 0px 0px 3px 1px #e0e1e0;
+            padding: 25px;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            margin: -190px 0 0 -175px;
+            width: 300px;
+            z-index: 25;
+        }
+        .login_reg .tit {
+            color: #333;
+            padding: 15px 0 20px;
+        }
+        .login_reg .more_info {
+            color: #b8c4ce;
+            font-size: 12px;
+            margin-left: 25px;
+            margin-top: 6px;
+        }
+        .login .more_info {
+            font-size: 14px;
+            height: 54px;
+            margin-left: 0px;
+        }
+        .register .operate, .login .operate {
+            height: 54px;
+        }
+        .operate .btn {
+            border-radius: 20px;
+            background-color: #1FA0E2;
+            border: 1px #1FA0E2 solid;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: middle;
+            height: 28px;
+            line-height: 27px;
+            text-align: center;
+            width: 100px;
+        }
+        .login_reg .operate .btn {
+            border: 0;
+            border-radius: 3px;
+            font-size: 16px;
+            height: 40px;
+            line-height: 40px;
+            width: 100%;
+        }
+        .fr {
+            float: right;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .c_blue {
+            color: #35a9e5;
+        }
+        a:link {
+            outline-style: none;
+        }
+        i {
+            font-style: normal;
+        }
+        .ico, .kong {
+            display: inline-block;
+            vertical-align: middle;
+            height: 22px;
+            line-height: 22px;
+            margin-right: 3px;
+            width: 22px;
+        }
+        .ico {
+            background: url(http://www.xuecima.com/images/website.png) 0 0 no-repeat;
+        }
+        .login_reg .agregister .ico, .login .more_info .ico {
+            background-position: -81px -397px;
+            width: 13px;
+        }
+        .login_reg .agregister .checked.ico, .login .more_info .checked.ico {
+            background-position: -120px -397px;
+        }
+        li {
+            list-style: none outside;
+        }
+        .login_reg .li {
+            height: 80px;
+        }
+        .login_reg .ipt_box {
+            border-bottom: 1px #E9ECEE solid;
+            font-size: 15px;
+            height: 34px;
+            padding-bottom: 5px;
+        }
+        .error {
+            display: none;
+            color: #e9714e;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+        .error .ico {
+            background-position: -240px -395px;
+            margin-top: 0px;
+            width: 15px;
+        }
+        .login_reg .ul .ico {
+            margin-top: 6px;
+        }
+        .login_reg .error .ico {
+            margin-top: 0px;
+        }
+        .login_reg .pwd .ico {
+            background-position: -40px -396px;
+        }
+        input {
+            border: 0;
+            outline: 0;
+        }
+        input, select, textarea, button {
+            vertical-align: top;
+        }
+        input[type=text], input[type=password], textarea {
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+        }
+        .login_reg .ipt_box input {
+            height: 22px;
+            line-height: 22px;
+            padding: 6px 0;
+        }
+        .login_reg .nick_name .ico {
+            background-position: 0 -396px;
+        }
+        .login_reg .ipt_long input[type=text] {
+            width: 270px;
+        }
+        .login_reg .tit label {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body class="sp_body">
+<div class="section_wrap">
+    <div class="login_reg login">
+        <div class="main" id="login_div">
+            <p class="tit">
+                <label>登录账号</label>
+                <span class="fr">还没有账号<a class="c_blue tologin" href="http://www.xuecima.com:80/register-phone">立即注册</a></span>
+            </p>
+            <ul class="ul">
+                <li class="li">
+                    <div class="ipt_box ipt_long nick_name">
+                        <i class="ico"></i>
+                        <input name="loginName" type="text" placeholder="请输入手机号/邮箱">
+                    </div>
+                    <div class="error"><i class="ico"></i>手机或邮箱格式不正确</div>
+                </li>
+                <li class="li">
+                    <div class="ipt_box ipt_long pwd">
+                        <i class="ico"></i>
+                        <input name="loginPass" type="password" placeholder="请输入密码">
+                    </div>
+                    <div class="error"><i class="ico"></i>密码长度6~16位</div>
+                </li>
+            </ul>
+            <div class="more_info">
+                <label><i class="ico checked" name="remmber"></i>下次自动登录</label>
+                <div class="fr"><a class="c_blue" href="http://www.xuecima.com:80/look-for-pwd" target="_self">忘记密码？</a></div>
+            </div>
+            <div class="operate">
+                <span class="btn" onclick="javascript:G.login.doLogin();">登录</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+    /*! JPlaceHolder v0.1.0 2016-05-24 by mark */
+
+    var JPlaceHolder = {
+        //检测
+        _check: function() {
+            return 'placeholder' in document.createElement('input');
+        },
+        //初始化
+        init: function() {
+            if (!this._check()) { //如果浏览器不支持placeholder，则执行类效果器
+                this.fix();
+            }
+        },
+        //修复
+        fix: function() {
+            jQuery(':input[placeholder]').each(function(index, element) {
+                var self = $(this),
+                        txt = self.attr('placeholder');
+                if(txt){
+                    self.wrap($('<div></div>').css({ position: 'relative', zoom: '1', width: self.outerWidth(true), display: self.css('display') }));
+                    var h = self.outerHeight(true),
+                            paddingleft = self.css('padding-left');
+                    var holder = $('<span></span>').text(txt).css({ position: 'absolute', left: paddingleft, top: 0, height: h, 'line-Height': h + 'px', color: '#666' }).appendTo(self.parent());
+                    self.focusin(function(e) {
+                        holder.hide();
+                    }).focusout(function(e) {
+                        if (!self.val()) {
+                            holder.show();
+                        }
+                    });
+                    holder.click(function(e) {
+                        holder.hide();
+                        self.focus();
+                    });
+                }
+            });
+        }
+    };
+    //执行
+    jQuery(function() {
+        JPlaceHolder.init();
+    });
+
+</script>
+</body>
+
+</html>

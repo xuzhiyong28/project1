@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>虚拟代理合并 HTTP 请求</title>
+</head>
+<body>
+<input type="checkbox" id="1"/>1
+<input type="checkbox" id="2"/>2
+<input type="checkbox" id="3"/>3
+<input type="checkbox" id="4"/>4
+<script>
+    //创建一个虚拟代理，实现2秒后发送http
+    var proxySynchronousFile = (function () {
+        var cache = [], //保存一段时间需要发送http的ID
+            timer; //定时器
+        var synchronousFile = function(){
+            console.log("发送http");
+        }
+        return function (id) {
+            cache.push(id);
+            if (timer) return; // 如果定时器已启动的话，就不继续执行
+            timer = setTimeout(function () {
+                synchronousFile(cache.join(',')); // 2秒后发送http请求
+                clearTimeout(timer);
+                timer = null;
+                cache = [];
+            }, 2000);
+        }
+    })();
+
+    var checkBox = document.getElementsByTagName('input');
+    for (var i = 0, c; c = checkbox[i++];) {
+        c.onclick = function () {
+            if (this.checked === true) {
+                proxySynchronousFile(this.id);
+            }
+        }
+    }
+
+</script>
+</body>
+</html>

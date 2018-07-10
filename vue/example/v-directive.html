@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Vue</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+	<h1>v-directive 实例</h1>
+	<div id="app">
+		<div v-jspang="color">{{num}}</div>
+		<p><button v-on:click="add">添加</button></p>
+		<p><button onclick="unbind()">解绑</button></p>
+	</div>
+
+	<script type="text/javascript">
+		/**
+			el -- 上面的v-jspang的div元素
+			binding -- 就是v-jspang的值，对应color 是下面的green
+		**/
+		/*Vue.directive("jspang",function(el,binding,vmodel){
+				console.log(el);
+				console.log(binding);
+				console.log(binding.value);
+				console.log(binding.name);
+				el.style = "color:" + binding.value;
+		});*/
+		//更详细的绑定（钩子函数）
+		Vue.directive('jspang',{
+			bind : function(el,binding){
+				console.log('1 - bind');
+				el.style = "color:" + binding.value;
+			},
+			inserted : function(){
+				console.log('2 - inserted');
+			},
+			update : function(){
+				console.log('3 - update');
+			},
+			componentUpdated : function(){
+				console.log('4 - componentUpdated');
+			},
+			unbind : function(){
+				console.log('5 - unbind');
+			}
+		});
+
+
+		var app = new Vue({
+			el : '#app',
+			data : {
+				num : 10,
+				color : 'green'
+			},
+			methods : {
+				add : function(){
+					this.num ++ ;
+				}
+			}
+		});
+
+		function unbind(){
+			app.$destroy();
+		}
+
+	</script>
+</body>
+</html>

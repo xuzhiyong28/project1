@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Vue</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+	<h1>v-pre & v-cloak & v-once</h1>
+	<div id="app">
+		<div v-pre>{{message}}</div> <!--在模板中跳过vue的编译，直接输出原始值。就是在标签中加入v-pre就不会输出vue中的data值了 这里就是原样输出{{message}}-->
+		<div v-cloak>渲染完以后，才展示!</div><!--渲染完以后，才展示-->
+		<div>
+			<input type="text" v-once v-model="message"/><br><!--v-once 只在第一次展示时候渲染，之后再变化也没效果-->
+			<input type="text" v-model="message"/><br> 
+		</div>
+	</div>
+	<script type="text/javascript"> 
+		new Vue({
+			el : '#app',
+			data : {
+				message : 'hello world'
+			}
+			
+		});
+	</script>
+</body>
+</html>

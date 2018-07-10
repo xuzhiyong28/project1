@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>关于使用vertical-align使图片垂直居中的小细节</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    div {
+        margin-top: 50px;
+        height: 280px;/*关键*/
+        line-height: 280px;/*关键:同时设置一致的值*/
+        font-size: 0; /*关键*/
+        text-align: center;/*关键*/
+        background-color: #A2A590;
+    }
+
+    div img {
+        vertical-align: middle;
+    }
+</style>
+<body>
+    <div>
+        <img src="images/1.jpg" alt="logo" id="logo" />
+    </div>
+</body>
+</html>

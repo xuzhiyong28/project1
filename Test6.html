@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>JS获取验证码的倒计时</title>
+</head>
+<style>
+    * {
+        box-sizing: border-box; /*使用标准和模型*/
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+        /*-moz代表firefox浏览器私有属性
+          -ms代表IE浏览器私有属性
+          -webkit代表chrome、safari私有属性*/
+    }
+
+    html {
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        font-size: 62.5%;
+        height: 100%;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .get_code {
+        display: inline-block;
+        border: 1px solid #c40d0e;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 30px;
+        color: #c40d0e;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-size: 12px;
+    }
+
+    .c2 {
+        background-color: #d4d4d4;
+        border: 1px solid #d4d4d4;
+        color: #fff;
+    }
+</style>
+<body>
+<a href="javascript:void(0);" id="valicode" class="get_code">获取验证码</a>
+</body>
+<script type="text/javascript" src="jquery-1.9.1.js"></script>
+<script>
+    var Valicode = (function ($) {
+        var fn = function (config) {
+            this.listeners = {
+                'onClick': null
+            }
+            if (typeof config.listeners == 'object') {
+                for (var arr in config.listeners) {
+                    if (arr in this.listeners) {
+                        this.listeners[arr] = config.listeners[arr];
+                    }
+                }
+            }
+            this.init();
+        }
+        fn.prototype = {
+            init: function () {
+                var self = this;
+                $('#valicode').click(function () {
+                    if (typeof self.listeners.onClick == 'function') {
+                        self.listeners.onClick($(this));
+                    }
+                });
+            }
+        }
+        return fn;
+    })(jQuery);
+
+
+
+
+
+    $(function () {
+
+        /*对象方式写法*/
+        var valicode = new Valicode({
+            listeners: {
+                onClick: function (id) {
+                    var _this = id;
+                    if (!_this.hasClass('c2')) {
+                        var html = _this.html();
+                        var t = 10;
+                        _this.addClass('c2').html(t + '秒后重试');
+                        var setInterval1 = setInterval(function () {
+                            t--;
+                            _this.html(t + '秒后重试');
+                            if (t == 0) {
+                                clearInterval(setInterval1);
+                                _this.removeClass('c2').html(html);
+                            }
+                        }, 1000);
+                    }
+                }
+            }
+        });
+
+
+        /*jquery写法*/
+        /*
+            $('#valicode').on('click', function (event) {
+                var _this = $(this);
+                if (!_this.hasClass('c2')) {
+                    var html = _this.html();
+                    var t = 59;
+                    _this.addClass('c2').html(t + '秒后重试');
+                    var setInterval1 = setInterval(function () {
+                        t--;
+                        _this.html(t + '秒后重试');
+                        if (t == 0) {
+                            clearInterval(setInterval1);
+                            _this.removeClass('c2').html(html);
+                        }
+                    }, 1000);
+                }
+            });
+        */
+    });
+</script>
+</html>

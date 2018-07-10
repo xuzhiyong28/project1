@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>工厂模式</title>
+</head>
+<body>
+<script src="Interface.js"></script>
+<script>
+    var Bicycle = new Interface('Bicycle',['assemble','wash','ride','repair']);
+    // 快速车 --动态原型模式
+    var  Speedster = function(){
+        if(typeof this.assemble != "function"){
+            Speedster.prototype.assemble = function(){
+                    console.log('assemble');
+            }
+        }
+        if(typeof this.wash != "function"){
+            Speedster.prototype.wash = function(){
+                console.log('wash');
+            }
+        }
+        if(typeof this.ride != "function"){
+            Speedster.prototype.ride = function(){
+                console.log('ride');
+            }
+        }
+        if(typeof this.repair != "function"){
+            Speedster.prototype.repair = function(){
+                console.log('repair');
+            }
+        }
+
+    };
+    //工厂模式模式
+    var BicyBicleFactory = {
+        //创建车
+        createBicyBicle : function(){
+            var bicycle;
+            switch (model){
+                case 'The Speedster' :
+                    bicycle = new Speedster();
+                    break;
+                case 'The Lowrider' :
+                    bicycle = new Speedster(); //Lowrider
+                    break;
+                case 'The Comfort Cruiser':
+                    bicycle = new Speedster();
+                    break;
+                default :
+                    bicycle = new Speedster(); //ComfortCruiser
+            }
+            Interface.ensureImplements(bicycle,Bicycle); //用来判断是否Speedster实现Bicycle里面的接口
+            return bicycle;
+        }
+    }
+
+
+   //自行车商店
+   var BicyBicleShop = function(){
+
+       if(typeof this.sellBicycle != 'function'){
+           //卖车
+           BicyBicleShop.prototype.sellBicycle = function(model){
+               var bicycle = BicyBicleFactory.createBicyBicle(model);
+               return bicycle;
+           }
+       }
+   };
+
+   var  bicyBicleShop = new BicyBicleShop();
+   var speedster = bicyBicleShop.sellBicycle('The Speedster');
+    speedster.assemble();
+
+
+</script>
+</body>
+</html>

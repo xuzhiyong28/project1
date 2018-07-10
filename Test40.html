@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<script src="js/viewer/jquery.js"></script>
+	<script type="text/javascript">
+	function Foo(){
+		console.log(this == Foo);
+		this.property  = 'xx';
+	}
+	var foo = new Foo();
+	</script>
+</body>
+
+</html>

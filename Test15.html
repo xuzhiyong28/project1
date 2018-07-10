@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>商品放大效果</title>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .d1 {
+        width: 200px;
+        height: 200px;
+        border: 1px solid #333;
+        margin: 20px 0 0 100px;
+        float: left;
+        position: relative;
+    }
+
+    .d1 img {
+        width: 200px;
+        height: 200px;
+        vertical-align: top;
+    }
+
+    span {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: #f00;
+        opacity: 0.4;
+        filter: alpha(opacity:40);
+        display: none;
+        cursor: all-scroll;
+    }
+
+    .d2 {
+        width: 350px;
+        height: 350px;
+        border: 1px solid #333;
+        float: left;
+        margin: 20px;
+        overflow: hidden;
+        position: relative;
+        display: none;
+    }
+
+    .d2 img {
+        width: 500px;
+        height: 500px;
+        vertical-align: top;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+</style>
+<body>
+<div class="d1" id="d1">
+    <span id="osp"></span>
+    <img src="http://sup.img3.51sole.com/images3/20100811/205525_2010811052812.jpg" alt=""/>
+</div>
+<div class="d2" id="d2">
+    <img src="http://sup.img3.51sole.com/images3/20100811/205525_2010811052812.jpg" alt="" id="img2"/>
+</div>
+
+<script>
+
+
+    window.onload = function () {
+        var oD1 = document.getElementById('d1');
+        var oD2 = document.getElementById('d2');
+        var oSpan = document.getElementById('osp');
+        var oImg2 = document.getElementById('img2');
+        oD1.onmouseover = function () {
+            oSpan.style.display = 'block';
+            oD2.style.display = 'block';
+            document.onmousemove = function (event) {
+                var oEvent = event || window.event;
+                console.log('oEvent.clientX = ' + oEvent.clientX);
+                console.log('oSpan.offsetWidth = ' + oSpan.offsetWidth);
+                console.log('oD1.offsetLeft = ' + oD1.offsetLeft);
+                var l = oEvent.clientX - oSpan.offsetWidth / 2 - oD1.offsetLeft;
+                var t = oEvent.clientY - oSpan.offsetHeight / 2 - oD1.offsetTop;
+                if (l < 0) {
+                    l = 0
+                }
+                ;
+                if (t < 0) {
+                    t = 0
+                }
+                ;
+                if (l > oD1.offsetWidth - oSpan.offsetWidth) {
+                    l = oD1.offsetWidth - oSpan.offsetWidth - 2
+                }
+                ;
+                if (t > oD1.offsetHeight - oSpan.offsetHeight) {
+                    t = oD1.offsetHeight - oSpan.offsetHeight - 2
+                }
+                ;
+                var ml = l / (oD1.offsetWidth - oSpan.offsetWidth - 2) * (oD2.offsetWidth - 2 - oImg2.offsetWidth);
+                var mt = t / (oD1.offsetHeight - oSpan.offsetHeight - 2) * (oD2.offsetHeight - 2 - oImg2.offsetHeight);
+                oSpan.style.left = l + 'px';
+                oSpan.style.top = t + 'px';
+                oImg2.style.left = ml + 'px';
+                oImg2.style.top = mt + 'px';
+            }
+        }
+        oD1.onmouseout = function () {
+            document.onmousemove = null;
+            oSpan.style.display = 'none';
+            oD2.style.display = 'none';
+        }
+    }
+
+
+    //自定义插件
+    /* ;
+     (function ($, window, document, undefined) {
+     var Fnc = function (ele, opts) {
+     this.$myid = ele;
+     this.imagesrc = opts.imagesrc || "";
+     this.divWidthAndheight = opts.divWidthAndheight || 200;// 小div宽度
+     this.mfc = opts.mfc || 2.5; // 放大因子
+     this.imageSmall = $("<div class='d1' id='imageSmall'></div>").css({
+     width: this.divWidthAndheight + "px",
+     height: this.divWidthAndheight + "px"
+     });
+     this.images = $("<img id='img1' src='" + this.imagesrc + "' />").css({
+     width: (this.divWidthAndheight * (this.mfc + 1)) + "px",
+     height: (this.divWidthAndheight * (this.mfc + 1)) + "px"
+     });
+
+     this.images2 = $("<img id='img2' src='" + this.imagesrc + "' />").css({
+     width: this.divWidthAndheight + "px",
+     height: this.divWidthAndheight + "px"
+     });
+
+     this.imageBig = $("<div class='d2' id='imageBig'></div>").css({
+     width: (this.divWidthAndheight * this.mfc) + "px",
+     height: (this.divWidthAndheight * this.mfc) + "px"
+     });
+     this.imgspan = $("<span id='osp'></span>");
+     //初始化操作
+     this.init();
+     };
+
+     Fnc.prototype = {
+     init: function () {
+     var self = this;
+     this.imageSmall.append(this.imgspan).append(this.images);
+     this.imageBig.append(this.images2);
+     this.$myid.append(this.imageSmall);
+     this.$myid.append(this.imageBig);
+     var imgspan = this.imgspan;
+     var imageBig = this.imageBig;
+     var imageSmall = this.imageSmall;
+     var images = this.images;
+     var images2 = this.images2;
+     this.imageSmall.on({
+     mouseover : function(event){
+     imgspan.css({display:'block'});
+     imageBig.css({display:'block'});
+     document.onmousemove = function (event) {
+     var oEvent = event || window.event;
+     var imgspanofw = imgspan.get(0).offsetWidth;
+     var imgspanofh = imgspan.get(0).offsetHeight;
+     var imssmallofl = imageSmall.get(0).offsetLeft;
+     var imssmalloft = imageSmall.get(0).offsetTop;
+     var l = oEvent.clientX - imgspanofw / 2 - imssmallofl;
+     var t = oEvent.clientY - imgspanofh / 2 - imssmalloft;
+     if (l < 0) {
+     l = 0
+     };
+     if (t < 0) {
+     t = 0
+     };
+     if (l > imgspanofw - imgspan.get(0).offsetWidth) {
+     l = imageSmall.get(0).offsetWidth - imgspan.get(0).offsetWidth - 2
+     };
+     if (t > imageSmall.get(0).offsetHeight - imgspan.get(0).offsetHeight) {
+     t = imageSmall.get(0).offsetHeight - imgspan.get(0).offsetHeight - 2
+     };
+     var ml = l / (imageSmall.offsetWidth - oSpan.offsetWidth - 2) * (imageBig.get(0).offsetWidth - 2 - images2.get(0).offsetWidth);
+     var mt = t / (imageSmall.offsetHeight - oSpan.offsetHeight - 2) * (imageBig.get(0).offsetHeight - 2 - images2.get(0).offsetHeight);
+     imgspan.get(0).style.left = l + 'px';
+     imgspan.get(0).style.top = t + 'px';
+     images2.get(0).style.left = ml + 'px';
+     images2.get(0).style.top = mt + 'px';
+
+     }
+     },
+     mouseout : function(event){
+     document.onmousemove = null;
+     imgspan.css({display:'none'});
+     imageBig.css({display:'none'});
+     }
+     });
+
+     }
+     }
+
+     $.fn.imageBig = function (opts) {
+     var fnc = new Fnc(this, opts);
+     }
+     })(jQuery, window, document);
+
+     $(function () {
+     $("#mydiv").imageBig({
+     imagesrc: 'http://sup.img3.51sole.com/images3/20100811/205525_2010811052812.jpg',
+     mfc: 1.75,
+     divWidthAndheight: '200'
+     });
+     });*/
+</script>
+</body>
+</html>

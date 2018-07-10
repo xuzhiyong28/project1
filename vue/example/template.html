@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Vue</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+	<h1>v-directive 实例</h1>
+	<div id="app">
+	   
+	</div>
+
+    <template id="demo2">
+        <h2 style="color:red">我是template标签模板</h2>
+    </template>
+
+    <script type='x-template' id="demo3">
+        <h2 style="color:red">我是script标签模板</h2>
+    </script>
+
+	<script type="text/javascript">
+		var app = new Vue({
+			el : '#app',
+			data : {
+				
+			},
+			methods : {
+			},
+            //template : `<h1 style="color:red">我是选项模板</h1>`
+            //template : '#demo2'
+            template : '#demo3'
+		});
+
+	
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>类数组:拥有一个 length 属性和若干索引属性的对象</title>
+</head>
+<body>
+<script>
+	//类数组 拥有一个length属性，且有若干个索引属性的对象
+ 	var arraylike = {
+ 		0 : 'name',
+ 		1 : 'age',
+ 		2 : 'sex',
+ 		length : 3
+ 	}
+ 	//类数组调用数组的方法 可以采用Function.call
+ 	var arrayListStr = Array.prototype.join.call(arraylike,'&');//name&age&sex
+ 	var array = Array.prototype.slice.call(arraylike,0); //将类数组转化成数组
+ 	
+</script>
+</body>
+</html>

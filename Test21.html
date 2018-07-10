@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>debounce（防抖）和throttle（节流）</title>
+    <!-- https://segmentfault.com/a/1190000005926579 -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 2000px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<h3>
+    窗口的resize、scroll，输入框内容校验等操作时，如果这些操作处理函数较为复杂或页面频繁重渲染等操作时，如果事件触发的频率无限制，会加重浏览器的负担，导致用户体验非常糟糕。
+    此时我们可以采用debounce（防抖）和throttle（节流）的方式来减少触发的频率，同时又不影响实际效果
+</h3>
+
+<div class="container">
+    <div class="section">
+        <h3 class="section__title text-center">debounce - 防抖</h3>
+        <h5>debounce会合并事件且不会去触发事件，当一定时间内没有触发再这个事件时，才真正去触发事件</h5>
+
+        <div class="section__boxes">
+            <div class="form-group">
+                <label for="debounceInput">Letters</label>
+                <input type="text" class="form-control" id="debounceInput">
+            </div>
+            <div class="form-group">
+                <label for="debounceTarget">ToUpperCase</label>
+                <input type="text" class="form-control" id="debounceTarget" disabled="disabled">
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <h3 class="section__title text-center">throttle - 节流</h3>
+        <h5>持续触发事件时，throttle会合并一定时间内的事件，并在该时间结束时真正去触发一次事件</h5>
+
+        <div class="section__boxes">
+            <div class="form-group">
+                <label for="throttleInput">Letters</label>
+                <input type="text" class="form-control" id="throttleInput">
+            </div>
+            <div class="form-group">
+                <label for="throttleTarget">ToUpperCase</label>
+                <input type="text" class="form-control" id="throttleTarget" disabled="disabled">
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3>滚动事件的防抖跟节流</h3>
+
+<div id="mydiv" style="width:200px;height:100px;overflow:scroll;">
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+</div>
+
+
+<script type="text/javascript" src="jquery-1.9.1.js"></script>
+<script>
+
+
+    //防抖技术
+    var debounceInputElmt = document.getElementById('debounceInput');
+    var debounceTargetElmt = document.getElementById('debounceTarget');
+    var deFn = debounce(function () {
+        debounceTargetElmt.value = (debounceInputElmt.value || '').toUpperCase();
+    }, 500);
+    debounceInputElmt.addEventListener('input', deFn);
+
+
+    //节流技术
+    var throttleInputElmt = document.getElementById("throttleInput");
+    var throttleTargetElmt = document.getElementById('throttleTarget');
+    var jlFn = throttle(function () {
+        throttleTargetElmt.value = (throttleInputElmt.value || '').toUpperCase();
+    }, 500);
+    throttleInputElmt.addEventListener('input', jlFn);
+
+
+
+    //防抖
+    function debounce(fn, delay) {
+        var ctx, args;
+        var timer = null;
+        var layer = function () {
+            fn.apply(ctx, args);
+            // 当事件真正执行后，清空定时器
+            timer = null;
+        };
+        return function () {
+            ctx = this; //这边的ctx是 #debounceInput框
+            args = arguments;
+            // 当持续触发事件时，若发现事件触发的定时器已设置时，则清除之前的定时器
+            if (timer) {
+                clearTimeout(timer);
+                timer = null;
+            }
+            //重新设置触发的定时器
+            timer = setTimeout(layer, delay);
+        }
+    }
+
+    //节流
+    function throttle(fn, delay) {
+        var ctx;
+        var args;
+        var previous = Date.now();
+        var layer = function () {
+            fn.apply(ctx, args);
+        };
+        return function () {
+            ctx = this;
+            args = arguments;
+            var now = Date.now();
+            // 本次事件触发与上一次的时间比较
+            var diff = now - previous - delay;
+            // 如果隔间时间超过设定时间，即再次设置事件触发的定时器
+            if (diff >= 0) {
+                previous = now;
+                setTimeout(layer, delay);
+            }
+        };
+    }
+
+
+    //jquery版本_防抖
+    var debAndthroFn = (function ($, debAndthroMod) {
+        debAndthroMod.debTimer = null;
+        debAndthroMod.debounce = function (fn, wait) {
+
+            return function () {
+                var _this = this; // javasrcipt 对象 表示这个div
+                var jQthis = $(this); // jquery对象 表示这个div
+                var timer = jQthis.data('timer') || null;
+                if (timer) {
+                    clearTimeout(timer);
+                    jQthis.removeData('timer');
+                }
+                jQthis.data('timer', setTimeout(fn, wait));
+            }
+        }
+
+
+        //jQuery节流_可能有问题
+        debAndthroMod.throttle = function (jId, fn, wait) {
+            var previous = Date.now();
+            jId.data('previous', previous); //先存入当前时间
+            return function () {
+                var _this = this;
+                var jQthis = $(this);
+                var now = Date.now();
+                // 本次事件触发与上一次的时间比较
+                var diff = now - jQthis.data('previous') - wait;
+                // 如果隔间时间超过设定时间，即再次设置事件触发的定时器
+                if (diff >= 0) {
+                    jQthis.data('previous', now);
+                    setTimeout(fn, wait);
+                }
+
+            }
+        }
+
+
+        return debAndthroMod;
+
+    })(jQuery, window.debAndthroFn || {});
+
+
+    $(function () {
+
+
+        $("window").scroll(debAndthroFn.debounce(function(){
+         console.log('防抖');
+         },500));
+
+        $("#mydiv").scroll(debAndthroFn.throttle($("#mydiv"), function () {
+                console.log('节流');
+        }, 500));
+
+    });
+
+
+</script>
+</body>
+</html>

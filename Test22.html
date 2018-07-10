@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    var Set = (function () {
+        var fnSet = function () {
+            this.values = {};  // 集合数据保存在对象的属性里
+            this.n = 0; //集合个数
+            this.add.apply(this, arguments);
+        }
+
+        fnSet._v2s = function (val) {
+            switch (val) {
+                case undefined :
+                    return 'u';
+                case null :
+                    return 'n';
+                case true :
+                    return 't';
+                case false :
+                    'f';
+                default :
+                    switch (typeof val) {
+                        case 'number' :
+                            return '#' + val;
+                        case 'string' :
+                            return '"' + val;
+                        default :
+                            return '@' + objectId(val);
+
+                    }
+            }
+            function objectId(o) {
+                var prop = "|**objectid**|"; //私有属性，用于存放id
+                if (!o.hasOwnProperty(prop)) {
+                    o[prop] = fnSet._v2s.next++;
+                }
+                return o[prop];
+            }
+        };
+        fnSet._v2s.next = 100; // 设置初始id的值
+
+
+        //Set的add方法
+        fnSet.prototype.add = function () {
+            for (var i = 0; i < arguments.length; i++) {
+                var val = arguments[i];
+                var str = fnSet._v2s(val);  //str表示名称 Set里面是值不重复的 假如有一个值xuzhiyong 对应的str='"xuzhiyong' ,则不可能有第二个了
+                if (!this.values.hasOwnProperty(str)) { //如果不存在集合中
+                    this.values[str] = val;
+                    this.n++;
+                }
+            }
+            return this;
+        };
+
+        //Set的remove方法
+        Set.prototype.remove = function () {
+            for (var i = 0; i < arguments.length; i++) {
+                var str = fnSet._v2s(arguments[i]);
+                if (this.values.hasOwnProperty(str)) {
+                    delete this.values[str];
+                    this.n--;
+                }
+            }
+            return this;
+        };
+
+        //判断Set集中中是否存在某个值
+        fnSet.prototype.contains = function (value) {
+            return this.values.hasOwnProperty(fnSet._v2s(value));
+        };
+
+        //返回集合大小
+        fnSet.prototype.size = function () {
+            return this.n;
+        };
+
+        //Set遍历
+        fnSet.prototype.foreach = function (f, context) {
+            for (var s in this.values) {
+                if (this.values.hasOwnProperty(s)) {
+                    f.call(context, this.values[s]);
+                }
+            }
+            return context;
+        }
+        return fnSet;
+    })();
+
+    var MySet = new Set('a', 'b', 'c', 'd');
+    MySet.add('d', 'e', 'f', 'f');
+    var o = {"name": "xuzhiyong"};
+
+    //遍历 实现将参数'a', 'b', 'c', 'd' 存入o对象中
+    MySet.foreach(function (value) {
+        var _this = this;
+        _this[MySet.constructor._v2s(value)] = value;
+    }, o);
+</script>
+
+<script>
+
+
+</script>
+
+
+</body>
+</html>

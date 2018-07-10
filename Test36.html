@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+	<title>传统javasrcipt - promise</title>
+</head>
+
+<body>
+	<script>
+		/*
+			加载图片
+			*/
+		function loadImageAsync(url) {
+			return new Promise(function (resolve, reject) {
+				var image = new Image();
+				image.onload = function () {
+					resolve("hahah");
+				};
+				image.onerror = function () {
+					reject(new Error('Could not load image at ' + url));
+				};
+				image.src = url;
+			});
+		}
+		/*loadImageAsync('https://10.189.145.58:8078/css/images/lgimg/logo.png').then(function(data){
+			alert(data);
+		});*/
+
+		/*
+			AJAX-- promise
+			*/
+		var getJSON = function (url) {
+			var promise = new Promise(function (resolve, reject) {
+				var client = new XMLHttpRequest();
+				client.open('GET', url);
+				client.onreadystatechange = function () {
+					if (this.readyState != 4) return;
+					if (this.state === 200) {
+						resolve(this.response);
+					} else {
+						reject('error');
+					}
+				};
+				client.responseType = "json";
+				client.setRequestHeader("Accept", "application/json");
+				client.send();
+
+			});
+			return promise;
+		}
+		/*getJSON('data/data1.json').then(function(response){
+			alert(response);
+		},function(error){alert(error)});*/
+
+
+		/**
+			Promise解决回调地狱
+			需求:需要发两个ajax，先去查是否存在该学生，如果有则再发一笔ajax去查学生信息
+		**/
+		var isExisStu = function(name){
+			return new Promise(function(resolve,reject){
+				$.ajax({
+					type: "post",
+					url : "data/data36.json",
+					dataType : "json",
+					data : {},
+					contentType: "application/json;charset-utf-8",
+					success : function(data){
+						resolve(data);
+					},
+					error : function(data){
+						reject(data);
+					}
+				});
+			});
+		};
+
+		var searchStu = function(name){
+		    return new Promise(function(resolve,reject){
+                $.ajax({
+                    type: "post",
+                    url : "data/data36.json",
+                    dataType : "json",
+                    data : {name : name},
+                    contentType: "application/json;charset-utf-8",
+                    success : function(data){
+                        resolve(data); //返回学生信息
+                    },
+                    error : function(data){
+                        reject(data);
+                    }
+                });
+			});
+		}
+
+		/*isExisStu("").then(function(data){
+		    if(data.checkStu == true)
+		        return searchStu(data.name); //返回第二个的Promise, 下面直接使用then执行第二个Promise的resolve
+		}).then(function(data){
+		    console.log(JSON.stringify(data));
+		});*/
+
+
+        /***
+		 * p1和p2都是 Promise 的实例，但是p2的resolve方法将p1作为参数，即一个异步操作的结果是返回另一个异步操作
+		 * 将导致p1的处理结果决定了p2
+         * @type {Promise}
+         */
+		/*
+		var p1 = new Promise(function(resolve,reject){
+		    setTimeout(function(){
+		        reject(new Error("fail"));
+			},3000);
+		});
+		var p2 = new Promise(function(resolve,reject){
+			resolve(p1);
+		});
+		p2.then(function(result){
+            console.log('p2--resolve');
+		    console.log(result);
+		}).catch(function(error){
+		    console.log(error);
+		});*/
+		
+
+		//一般来说，不要在then方法里面定义 Reject 状态的回调函数（即then的第二个参数），总是使用catch方法,这是比较好的方法
+		/*
+		const someAsyncThing = function(){
+			return new Promise(function(resolve , reject){
+				//x没有定义测试会抛出错误
+				resolve(x + 2);
+			});
+		}
+		someAsyncThing().then(function(){
+			console.log('evertykkk');
+		}).catch(function(error){
+			alert(error);
+		});*/
+
+
+		//多个Promiese的情况， Promise.all的then函数必须等数组内的Promise执行完成后才会执行
+		const p1 = new	Promise(function(resolve,reject){
+			resolve('hello');
+		}).then(function(result){
+			console.log(result);
+		});
+		const p2 = new Promise(function(resolve,reject){
+			throw new Error('报错了');
+		}).then(function(result){
+			console.log("success =" + result);			
+		}).catch(function(result){
+			console.log("error =" + result);	
+		});
+		Promise.all([p1,p2]).then(function(result){
+			console.log('all - success ');
+		}).catch(function(result){
+			console.log('all - error ');
+		});
+
+
+
+
+	</script>
+</body>
+
+</html>

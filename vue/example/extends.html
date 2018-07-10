@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Vue</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+	<h1>watch 实例</h1>
+	<em>用来监控数据</em>
+	<div id="app">
+		{{num}}
+		<p><button @click="add">add</button></p>
+	</div>
+
+	<script type="text/javascript">
+		var extendsObj = {
+			updated : function(){
+				console.log('扩展的updated');
+			}
+		}
+		var app = new Vue({
+			el : '#app',
+			data : {
+				num : 14
+			},
+			methods : {
+				add : function(){
+					console.log('我是原生的方法');
+					this.num ++ ;
+				}
+			},
+			updated : function(){
+				console.log('我是原生的updated');
+			},
+			extends : extendsObj
+			
+			
+		});
+
+		
+
+	
+
+	</script>
+</body>
+</html>

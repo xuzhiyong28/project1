@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+
+
+</head>
+<body>
+<script>
+    var req_data = {
+        "filepath": "",
+        "yhth": "860007377705",
+        "select_gdzh_gz": "",
+        "czgydm": "013086",
+        //"khyyb": "8358",
+        "jymm": "O0bHECrO8xWSpemETvIK4UubjKqKbYyVLRQGgwgp4HA=",
+        "select_gdzh_hb": "",
+        "dwdh": "",
+        "yhtmm": "V+cmDJyDfG8kx78AG7sFI6HSicqW+13ZXE6K3aX1oiU=",
+        "jjzh": "",
+        "jjzhjy": "",
+        "xb": "0",
+        "zjlb": "0",
+        "yxwtfs": "0,1,2,4,7,A,C,M,a,e,h,i,l,u",
+        "xwbh_gz": "720200",
+        "zdjs": "",
+        "grdxcp": "0",
+        "lllbmc_usd": "",
+        "xwbh_hb": "20158",
+        "zjbh": "410881194001104511",
+        "fsyyb": "8063",
+        "gj": "CHN",
+        "gdzhdj": [{"gdzh": "", "jys": "1", "xwbh": "62064", "type": "1"}, {
+            "gdzh": "",
+            "jys": "2",
+            "xwbh": "226900",
+            "type": "1"
+        }, {"gdzh": "", "jys": "D", "xwbh": "20158", "type": "0"}, {
+            "gdzh": "",
+            "jys": "H",
+            "xwbh": "227000",
+            "type": "0"
+        }, {"gdzh": "", "jys": "9", "xwbh": "720200", "type": "0"}],
+        "zjmmjy": "58c2471feac9b21594d702670b7fcf21b36861083c902325b1365a02224897c81cc69865c9a25dac40f5e303238b32ebf6638241d9d83848a2ae15e34590113f8374e3bdd9baaf8ce5966a0b74c029da93b9500e72eb9ce25de7ed325bbcb16e718ee8dd4da7a1c1096bede066648e14422f53ccd61ec21b06d332acbfd2f3d4",
+        "dbxfxe": "2000.00",
+        "yzbm": "459000",
+        "fqqd": "4",
+        "dz": "河南省济源市周园路文翠花园1号楼101",
+        "tjzq": "",
+        "wcnhm": "",
+        "jhrzjbh": "",
+        "zjmm": "fctuwRtHmk8ncM2/E4avK6gnmm8fBG07hA6kxC8DqQY=",
+        "dh": "",
+        "dlr_zjqsrq": "",
+        "sqrq": 20170627,
+        "gdzh_sh": "",
+        "lxrsj": "",
+        "yyah": "",
+        "cpyxq": "20190627",
+        "gdzh_sb": "",
+        "ywqqid": "10936",
+        "ywkhqx": "",
+        "zfmmjy": "6f4bda849ad54ecc548f14a01b6524ddceed44a69efea2c2a79a4c492962a6f1c9443d9ce7d0066bbcd4c7db1821c400af081dba0aa2a972d08e50b939815ab38dac599c0bc0fd0e2e39817fbd68d7e106aae21d77c988fc65c8d462420ff890a2250d35f7dd4b4c7eae44f5642f6ce03cd83ff9259344b096ff78863ba6d1ef",
+        "gdzh_sz": "",
+        "jjzhzdjs": "",
+        "sqsj": "09:16:52",
+        "yhdm": "6002",
+        "zfmm": "tfB+0bbP6Lv1N5itc4aBvza/KvKCWDaVoFns7Bbz49E=",
+        "wlfwmm": "",
+        "bz": "0",
+        "sjlb": "1",
+        "zjfz": "0ig",
+        "zjdz": "河南省济源市承留镇承留村",
+        "select_gdzh_sb": "",
+        "jymmjy": "82c6e7349cdc80339d771a39c1137e05776949f71e41e66e3ff0ee5a1d0d9db62f8afc4eaa1c5fc229d2f5737957a82bf1a3a8e9ff882141129ff63eeea627b0f770ad839ca55a1f676ec6f3dd0a1e5e62ca765a143afbddc0ca2e63d8984cfd7ded72e931b0fd28be2bd7098b1db791e9c08afc0a236632744cf9d338c7ab6d",
+        "lllb_usd": "12K",
+        "lxrxm": "",
+        "szzqzh_": "",
+        "select_gdzh_sh": "",
+        "lllbmc_hkd": "",
+        "select_gdzh_sz": "",
+        "dlr_khmc": "",
+        "jhrxm": "",
+        "sfcgbz": "0",
+        "zjxz": "",
+        "zjjzrq": "30001231",
+        "kfry": "",
+        "cgzdfs": "7",
+        "jyqx": "",
+        "llpl": "0",
+        "yhtmmjy": "11c6bc602a545dad326d4d46f53c744a28095e07e178e9374afd2b7527b4e8bca7e46a3f11de17b8102e34a3ea022ff7a97d806aeb47d82cbbae8cc867494ab4375b4b906dfd3e036f0b2ec5b0a5a8ebe6215921db33441069df0773db655f2d51eca8b457bb5eba107f91008b38d67ce3f8fc1051372ac040e23718d5f028da",
+        "cz": "",
+        "sj": "13103898208",
+        "dzqmyds": "1",
+        "nsr": "",
+        "email": "",
+        "zzqd": "0,2",
+        "select_ymth": "",
+        "zjfl": "1QB",
+        "clzt": "0",
+        "wqmsxwnl": "",
+        "dlr_zjjzrq": "",
+        "zjzhmb": "0Zi",
+        "dlrbh": "",
+        "gydm": "11605",
+        "jys_gz": "9",
+        "jhrjhrdhhm": "",
+        "csbh": "",
+        "checkflag": "1",
+        "ywdm": "20000",
+        "dlr_zjlb": "",
+        "zjfzjg": "济源市公安局",
+        "fqr": "11605",
+        "fxcp_djsm": "稳健型",
+        "edz": "1",
+        "sfrzqd": "1",
+        "jys_hb": "D",
+        "szzqzh": "",
+        "bgdz": "",
+        "tmdaArray": [{"cpda": "B", "cptm": 1, "cpth": 1}, {"cpda": "C", "cptm": 2, "cpth": 2}, {
+            "cpda": "A",
+            "cptm": 3,
+            "cpth": 3
+        }, {"cpda": "A", "cptm": 4, "cpth": 4}, {"cpda": "B", "cptm": 5, "cpth": 5}, {
+            "cpda": "B",
+            "cptm": 6,
+            "cpth": 6
+        }, {"cpda": "C", "cptm": 7, "cpth": 7}, {"cpda": "B", "cptm": 8, "cpth": 8}, {
+            "cpda": "B",
+            "cptm": 9,
+            "cpth": 9
+        }, {"cpda": "B", "cptm": 10, "cpth": 10}, {"cpda": "C", "cptm": 11, "cpth": 11}, {
+            "cpda": "E",
+            "cptm": 12,
+            "cpth": 12
+        }],
+        "gdzh_gz": "",
+        "khfz": "0A",
+        "xfgnkt": "1",
+        "ymth": "",
+        "gdkh_hb": "0",
+        "ywzjzh": "0341880000032551",
+        "gdzh_hb": "",
+        "shzqzh": "",
+        "gdkh_gz": "0",
+        "khfl": "0A",
+        "zjqsrq": "20080903",
+        "yhzhdj": [{
+            "zzdjfs": "",
+            "cgzdfsmc": "指定",
+            "yhzh": "6228484179282346475",
+            "zzhbzmc": "主",
+            "bz": 0,
+            "yhdm": "6002",
+            "cgbz": "1",
+            "yhdmmc": "6002 农行三方(人民币)",
+            "cgzdfs": "7",
+            "zzhbz": "1",
+            "yhmmjy": "",
+            "yhmm": ""
+        }],
+        "csrq": "19400110",
+        "wzhxysq": "1",
+        "wcnbz": "0",
+        "lllb_hkd": "12L",
+        "wlfwmmjy": "",
+        "czzd": "0071C215EF04",
+        "cpdj": "3",
+        "zzhbz": "1",
+        "yhmmjy": "",
+        "wlfwbs": "0",
+        "gdkh_sh": "1",
+        "blms": "3",
+        "zjsh": "2K0",
+        "cpdf": "46.00",
+        "tmdac": "94&2|95&3|96&1|173&1|97&2|98&2|99&3|100&2|101&2|102&2|174&3|103&5",
+        "czbz": "YGT",
+        "dzdfs": "1",
+        "bgyb": "",
+        "mzdm": "1",
+        "gdkh_sb": "0",
+        "zjdlqx": "",
+        "zdjsfs": "",
+        "fhfs": "0",
+        "shzqzh_": "",
+        "steps": {"yhzh": true, "khkh": true, "zldj": true, "zqzh": true, "fxcp": true, "khzj": true},
+        "lllb": "0tm",
+        "czyybdm": "8063",
+        "yhmm": "",
+        "lllbmc_rmb": "普通利率",
+        "dlms": "",
+        "zjlbmc": "中国居民身份证",
+        "jtdh": "",
+        "qqzh": "",
+        "yhzhjy": "6228484179282346475",
+        "jys_sz": "2",
+        "zfmmsz": "1",
+        "gsmc": "",
+        "khjc": "刘庆瑞",
+        "gj_zd": "156",
+        "xwbh_sb": "227000",
+        "xwbh_sh": "62064",
+        "gdkh_sz": "1",
+        "jjzhdj": [],
+        "dlrxx": "0",
+        "xystr": [{"qsxy": true}],
+        "xwbh_sz": "226900",
+        "xldm": "5",
+        "method": "4",
+        "sqjjzh": "",
+        "llfs": "0",
+        "yhzh": "6228484179282346475",
+        "remark": "",
+        "dlr_zjbh": "",
+        "khlb": "0",
+        "xfqd": "0,1",
+        "zzgnkt": "1",
+        "yyb": "8358",
+        "yybdm": "8358",
+        "jys_sh": "1",
+        "khly": "",
+        "zydm": "04",
+        "khmb": "0PS",
+        "jys_sb": "H",
+        "khmc": "刘庆瑞",
+        "zdcx_flag": true,
+        "lllb_rmb": "0tm",
+        "czgy": "11605",
+        "tadm": "",
+        "jhrzjlb": "0",
+        "wzzhbz": "0",
+        "drxfxe": "2000.00",
+        "nsrfw": "",
+        "zdzjlb": "1",
+        "jjzhArray": [],
+        "ywsl_flag": "0",
+        "ywslms": "3",
+        "lxrdh": "",
+        "jg": "",
+        "thb": "",
+        "xfgn_tzfs": "1,2",
+        "step": 6,
+        "cprq": "20170627",
+        "sffsyh": "1"
+    };
+
+    var new_req_data = {
+        "filepath": "",
+        "yhth": "860007377705",
+        "select_gdzh_gz": "",
+        "czgydm": "013086",
+        //"khyyb": "8063",
+        "jymm": "O0bHECrO8xWSpemETvIK4UubjKqKbYyVLRQGgwgp4HA=",
+        "select_gdzh_hb": "",
+        "dwdh": "",
+        "yhtmm": "V+cmDJyDfG8kx78AG7sFI6HSicqW+13ZXE6K3aX1oiU=",
+        "jjzh": "",
+        "jjzhjy": "",
+        "xb": "0",
+        "zjlb": "0",
+        "yxwtfs": "0,1,2,4,7,A,C,M,a,e,h,i,l,u",
+        "xwbh_gz": "720200",
+        "zdjs": "",
+        "grdxcp": "0",
+        "lllbmc_usd": "",
+        "xwbh_hb": "20158",
+        "zjbh": "410881194001104511",
+        "gj": "CHN",
+        "fsyyb": "8063",
+        "gdzhdj": [{"jys": "1", "gdzh": "", "xwbh": "62064", "type": "1"}, {
+            "jys": "2",
+            "gdzh": "",
+            "xwbh": "226900",
+            "type": "1"
+        }, {"jys": "D", "gdzh": "", "xwbh": "20158", "type": "0"}, {
+            "jys": "H",
+            "gdzh": "",
+            "xwbh": "227000",
+            "type": "0"
+        }, {"jys": "9", "gdzh": "", "xwbh": "720200", "type": "0"}],
+        "zjmmjy": "58c2471feac9b21594d702670b7fcf21b36861083c902325b1365a02224897c81cc69865c9a25dac40f5e303238b32ebf6638241d9d83848a2ae15e34590113f8374e3bdd9baaf8ce5966a0b74c029da93b9500e72eb9ce25de7ed325bbcb16e718ee8dd4da7a1c1096bede066648e14422f53ccd61ec21b06d332acbfd2f3d4",
+        "dbxfxe": "2000.00",
+        "yzbm": "459000",
+        "fqqd": "4",
+        "dz": "河南省济源市周园路文翠花园1号楼101",
+        "tjzq": "",
+        "wcnhm": "",
+        "jhrzjbh": "",
+        "zjmm": "fctuwRtHmk8ncM2/E4avK6gnmm8fBG07hA6kxC8DqQY=",
+        "dh": "",
+        "dlr_zjqsrq": "",
+        "sqrq": 20170627,
+        "gdzh_sh": "",
+        "lxrsj": "",
+        "yyah": "",
+        "cpyxq": "20190627",
+        "gdzh_sb": "",
+        "ywqqid": "10936",
+        "ywkhqx": "",
+        "zfmmjy": "6f4bda849ad54ecc548f14a01b6524ddceed44a69efea2c2a79a4c492962a6f1c9443d9ce7d0066bbcd4c7db1821c400af081dba0aa2a972d08e50b939815ab38dac599c0bc0fd0e2e39817fbd68d7e106aae21d77c988fc65c8d462420ff890a2250d35f7dd4b4c7eae44f5642f6ce03cd83ff9259344b096ff78863ba6d1ef",
+        "gdzh_sz": "",
+        "sqsj": "09:23:15",
+        "jjzhzdjs": "",
+        "yhdm": "6002",
+        "zfmm": "tfB+0bbP6Lv1N5itc4aBvza/KvKCWDaVoFns7Bbz49E=",
+        "wlfwmm": "",
+        "bz": "0",
+        "sjlb": "1",
+        "select_gdzh_sb": "",
+        "zjdz": "河南省济源市承留镇承留村",
+        "zjfz": "0ig",
+        "jymmjy": "82c6e7349cdc80339d771a39c1137e05776949f71e41e66e3ff0ee5a1d0d9db62f8afc4eaa1c5fc229d2f5737957a82bf1a3a8e9ff882141129ff63eeea627b0f770ad839ca55a1f676ec6f3dd0a1e5e62ca765a143afbddc0ca2e63d8984cfd7ded72e931b0fd28be2bd7098b1db791e9c08afc0a236632744cf9d338c7ab6d",
+        "lllb_usd": "12K",
+        "lxrxm": "",
+        "select_gdzh_sh": "",
+        "szzqzh_": "",
+        "lllbmc_hkd": "",
+        "dlr_khmc": "",
+        "select_gdzh_sz": "",
+        "jhrxm": "",
+        "sfcgbz": "0",
+        "zjxz": "",
+        "kfry": "",
+        "zjjzrq": "30001231",
+        "cgzdfs": "7",
+        "jyqx": "",
+        "llpl": "0",
+        "yhtmmjy": "11c6bc602a545dad326d4d46f53c744a28095e07e178e9374afd2b7527b4e8bca7e46a3f11de17b8102e34a3ea022ff7a97d806aeb47d82cbbae8cc867494ab4375b4b906dfd3e036f0b2ec5b0a5a8ebe6215921db33441069df0773db655f2d51eca8b457bb5eba107f91008b38d67ce3f8fc1051372ac040e23718d5f028da",
+        "cz": "",
+        "sj": "13103898208",
+        "dzqmyds": "1",
+        "nsr": "",
+        "zzqd": "0,2",
+        "email": "",
+        "select_ymth": "",
+        "zjfl": "1QB",
+        "clzt": "35",
+        "wqmsxwnl": "",
+        "dlr_zjjzrq": "",
+        "zjzhmb": "0Zi",
+        "jys_gz": "9",
+        "gydm": "11605",
+        "dlrbh": "",
+        "jhrjhrdhhm": "",
+        "csbh": "",
+        "checkflag": "1",
+        "ywdm": "20000",
+        "dlr_zjlb": "",
+        "zjfzjg": "济源市公安局",
+        "fqr": "11605",
+        "fxcp_djsm": "稳健型",
+        "edz": "1",
+        "sfrzqd": "1",
+        "jys_hb": "D",
+        "szzqzh": "",
+        "bgdz": "",
+        "tmdaArray": [{"cpda": "B", "cptm": 1, "cpth": 1}, {"cpda": "C", "cptm": 2, "cpth": 2}, {
+            "cpda": "A",
+            "cptm": 3,
+            "cpth": 3
+        }, {"cpda": "A", "cptm": 4, "cpth": 4}, {"cpda": "B", "cptm": 5, "cpth": 5}, {
+            "cpda": "B",
+            "cptm": 6,
+            "cpth": 6
+        }, {"cpda": "C", "cptm": 7, "cpth": 7}, {"cpda": "B", "cptm": 8, "cpth": 8}, {
+            "cpda": "B",
+            "cptm": 9,
+            "cpth": 9
+        }, {"cpda": "B", "cptm": 10, "cpth": 10}, {"cpda": "C", "cptm": 11, "cpth": 11}, {
+            "cpda": "E",
+            "cptm": 12,
+            "cpth": 12
+        }],
+        "gdzh_gz": "",
+        "khfz": "0A",
+        "xfgnkt": "1",
+        "ymth": "",
+        "gdkh_hb": "0",
+        "gdzh_hb": "",
+        "shzqzh": "",
+        "gdkh_gz": "0",
+        "khfl": "0A",
+        "zjqsrq": "20080903",
+        "yhzhdj": [{
+            "zzdjfs": "",
+            "cgzdfsmc": "指定",
+            "zzhbzmc": "主",
+            "yhzh": "6228484179282346475",
+            "bz": 0,
+            "yhdm": "6002",
+            "yhdmmc": "6002 农行三方(人民币)",
+            "cgbz": "1",
+            "cgzdfs": "7",
+            "zzhbz": "1",
+            "yhmmjy": "",
+            "yhmm": ""
+        }],
+        "csrq": "19400110",
+        "wzhxysq": "1",
+        "wcnbz": "0",
+        "lllb_hkd": "12L",
+        "wlfwmmjy": "",
+        "czzd": "0071C215EF04",
+        "cpdj": "3",
+        "zzhbz": "1",
+        "yhmmjy": "",
+        "wlfwbs": "0",
+        "gdkh_sh": "1",
+        "blms": "3",
+        "zjsh": "2K0",
+        "cpdf": "46.00",
+        "tmdac": "94&2|95&3|96&1|173&1|97&2|98&2|99&3|100&2|101&2|102&2|174&3|103&5",
+        "czbz": "YGT",
+        "dzdfs": "1",
+        "bgyb": "",
+        "mzdm": "1",
+        "gdkh_sb": "0",
+        "zjdlqx": "",
+        "zdjsfs": "",
+        "fhfs": "0",
+        "shzqzh_": "",
+        "steps": {"yhzh": true, "khkh": true, "zqzh": true, "zldj": true, "fxcp": true, "khzj": true},
+        "lllb": "0tm",
+        "czyybdm": "8063",
+        "yhmm": "",
+        "lllbmc_rmb": "普通利率",
+        "dlms": "",
+        "zjlbmc": "中国居民身份证",
+        "jtdh": "",
+        "qqzh": "",
+        "yhzhjy": "6228484179282346475",
+        "jys_sz": "2",
+        "zfmmsz": "1",
+        "gsmc": "",
+        "khjc": "刘庆瑞",
+        "gj_zd": "156",
+        "xwbh_sb": "227000",
+        "xwbh_sh": "62064",
+        "gdkh_sz": "1",
+        "jjzhdj": [],
+        "dlrxx": "0",
+        "xwbh_sz": "226900",
+        "xystr": [{"qsxy": true}],
+        "xldm": "5",
+        "method": "4",
+        "sqjjzh": "",
+        "llfs": "0",
+        "yhzh": "6228484179282346475",
+        "remark": "",
+        "dlr_zjbh": "",
+        "khlb": "0",
+        "xfqd": "0,1",
+        "zzgnkt": "1",
+        "yyb": "8063",
+        "jys_sh": "1",
+        "khly": "",
+        "zydm": "04",
+        "khmb": "0PS",
+        "jys_sb": "H",
+        "khmc": "刘庆瑞",
+        "zdcx_flag": true,
+        "lllb_rmb": "0tm",
+        "czgy": "11605",
+        "tadm": "",
+        "jhrzjlb": "0",
+        "wzzhbz": "0",
+        "drxfxe": "2000.00",
+        "nsrfw": "",
+        "zdzjlb": "1",
+        "jjzhArray": [],
+        "ywsl_flag": "1",
+        "ywslms": "3",
+        "lxrdh": "",
+        "jg": "",
+        "thb": "",
+        "xfgn_tzfs": "1,2",
+        "cprq": "20170627",
+        "step": 6,
+        "sffsyh": "1"
+    };
+
+
+    alert(checkisUpdate(new_req_data));
+    function checkisUpdate(newReq_data) {
+        var compare = {
+            isObj: function (object) {
+                return object && typeof (object) == 'object' && Object.prototype.toString.call(object).toLowerCase() == "[object object]";
+            },
+            isArray: function (object) {
+                return object && typeof (object) == 'object' && object.constructor == Array;
+            },
+            getLength: function (object) {
+                var count = 0;
+                for (var i in object)
+                    count++;
+                return count;
+            },
+            isInArray: function (array, key) {
+                var inArray = false;
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i] == key) {
+                        inArray = true;
+                        break;
+                    }
+                }
+                return inArray;
+            },
+            compareObj: function (objA, objB, flag) {
+                for (var key in objA) {
+                    if (!flag) //跳出整个循环
+                        break;
+                    if (!objB.hasOwnProperty(key)) {
+                        flag = false;
+                        break;
+                    }
+                    if (!compare.isArray(objA[key])) { //子级不是数组时,比较属性值
+                        if (objB[key] != objA[key]) {
+                            flag = false;
+                            break;
+                        }
+                    } else {
+                        if (!compare.isArray(objB[key])) {
+                            flag = false;
+                            break;
+                        }
+                        var oA = objA[key], oB = objB[key];
+                        if (oA.length != oB.length) {
+                            flag = false;
+                            break;
+                        }
+                        for (var k in oA) {
+                            if (!flag) //这里跳出循环是为了不让递归继续
+                                break;
+                            flag = compare.compareObj(oA[k], oB[k], flag);
+                        }
+                    }
+                }
+                return flag;
+            },
+            compareObj2: function (objA, objB, flag) {
+                var passKey = []; //不需要参与校验的字段
+                for (var key in objB) {
+                    if (compare.isInArray(passKey, key)) //几个密码不进行校验
+                        continue;
+                    if (!flag) //跳出整个循环
+                        break;
+                    if (!objA.hasOwnProperty(key)) {
+                        console.log('key1=' + key);
+                        flag = false;
+                        break;
+                    }
+                    if (!compare.isArray(objB[key])) { //子级不是数组时,比较属性值
+                        if (objB[key] != objA[key]) {
+                            try {
+                                console.log('key2=' + key);
+                            } catch (e) {
+
+                            }
+                            flag = false;
+                            break;
+                        }
+                    } else {
+                        try {
+                            console.log('key3=' + key);
+                        } catch (e) {
+
+                        }
+                        if (!compare.isArray(objA[key])) {
+                            flag = false;
+                            break;
+                        }
+                        var oA = objA[key], oB = objB[key];
+                        if (oA.length != oB.length) {
+                            flag = false;
+                            break;
+                        }
+                        for (var k in oB) {
+                            if (!flag) //这里跳出循环是为了不让递归继续
+                                break;
+                            flag = compare.compareObj2(oA[k], oB[k], flag);
+                        }
+                    }
+                }
+                return flag;
+            },
+            compareFn: function (objA, objB) {
+                //判断类型是否正确
+                if (!compare.isObj(objA) || !compare.isObj(objB)) {
+                    return false;
+                }
+                //判断长度是否一致
+                /* if (compare.getLength(objA) != compare.getLength(objB))
+                 return false;*/
+                return compare.compareObj2(objA, objB, true);//默认为true
+            }
+        };
+        return compare.compareFn(req_data, newReq_data);
+    }
+</script>
+</body>
+</html>

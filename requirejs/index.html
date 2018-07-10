@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript" src="js/require.js"></script>
+</head>
+
+<body>
+    <script>
+        //如果没有通过data-main属性指定baseUrl，也没有通过config的方式显示声明baseUrl，那么baseUrl默认为加载requirejs的那个页面所在的路径
+        require.config({
+            baseUrl: 'js',
+            paths: {
+                'jquery': 'jquery-3.2.1',
+                'app': 'app'
+            }
+        });
+        require(['app','jquery'],function(app,$){
+	         app.fun1();
+        });
+    </script>
+</body>
+
+</html>

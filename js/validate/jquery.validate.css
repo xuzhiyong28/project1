@@ -1,0 +1,18 @@
+.error {color: #CD0734;border:1px solid #CD0734;}
+span.error {
+  background:url(images/unchecked.gif) no-repeat 0px center;
+  padding-left:16px;
+  margin-left:50px;
+  color: #f4831d;
+  position:absolute;
+  margin-top:0px;
+}
+span.success {
+  background:url(images/checked.gif) no-repeat 0px center;
+  padding-left: 16px;
+  padding-bottom:0px;
+  margin-left:50px;
+  position:absolute;
+  margin-top:0px;
+  display:none;
+}

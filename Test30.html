@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="jquery-1.9.1.js"></script>
+    <title>jquery-promise</title>
+</head>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<body>
+
+<script>
+
+
+    $(function () {
+
+        /**
+         * 单个ajax的情况下 ， $.ajax()返回的是一个Deferred对象，可以在后面加done表示成功后的处理包括success后的处理
+         * */
+        $.ajax({
+            url: 'data/data1.json',
+            dataType: 'json',
+            type: 'post',
+            success: function (ret) {
+                for (var i = 0; i < 100; i++) {
+                    for (var j = 0; j < 100; j++) {
+
+                    }
+                }
+                console.log('ajax回调成功后执行了多个循环');
+            }
+        }).done(function () {
+            console.log('ajax回调成功了');
+        }).fail(function () {
+            console.log('ajax回调失败了');
+        });
+
+        /**
+         * $.when() 为多个操作指定回调函数 --- 比如多个ajax全部回调执行成功后才执行done
+         * */
+        var ajax1 = function () {
+            return $.ajax({
+                url: 'data/data1.json',
+                dataType: 'json',
+                type: 'post',
+                success: function () {
+                    console.log('ajax1回调成功');
+                }
+            });
+        }
+        var ajax2 = function () {
+            return $.ajax({
+                url: 'data/data1.json',
+                dataType: 'json',
+                type: 'post',
+                success: function () {
+                    console.log('ajax2回调成功');
+                }
+            });
+        }
+        $.when(ajax1(), ajax2()).done(function () {
+            console.log('ajax1,ajax2都回调成功后执行');
+        });
+
+
+        /**
+         * $.Deferred() 对象的用法
+         * deferred对象有三种执行状态----未完成，已完成(resolved)，已失败
+         * dtd.resolve() --- 将dtd对象的执行状态从"未完成"改为"已完成",从而触发done()方法
+         * dtd.reject()将dtd对象的执行状态从"未完成"改为"已失败",从而触发fail()方法
+         *
+         * */
+        var wait = function () {
+            var dtd = $.Deferred(); //函数内部创建一个Deferred
+            var tasks = function () {
+                console.log('执行完毕');
+                dtd.resolve(); //改变Deferred对象的执行状态为成功，从而执行done
+                //dtd.reject();  //改变Deferred对象的执行状态为失败，从而执行fail
+            }
+            setTimeout(tasks, 5000);
+            return dtd.promise();
+        }
+        $.when(wait()).done(function(){
+            console.log('执行完毕_回调成功');
+        }).fail(function(){
+            console.log('执行完毕_回调失败');
+        });
+        //或者下面这种写法
+        $.Deferred(wait).done(function(){
+            console.log('执行完毕_回调成功');
+        }).fail(function(){
+            console.log('执行完毕_回调失败');
+        });
+
+
+
+        /**
+         *  deferred.then -- 有时为了省事，可以把done()和fail()合在一起写，这就是then()方法
+         * */
+        $.when($.ajax({
+            url: 'data/data1.json',
+            dataType: 'json',
+            type: 'post',
+            success: function () {
+                console.log('回调成功');
+            }
+        })).then(function(){
+            console.log('successFunc');
+        },function(){
+            console.log('failureFunc');
+        });
+
+
+    });
+</script>
+</body>
+</html>

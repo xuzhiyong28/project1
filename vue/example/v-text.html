@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Vue</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+	<h1>v-text & v-html 实例</h1>
+	<div id="app">
+		<!--选择使用v-text的好处，如果下面js报错，界面上会展示{{message}}不友好，且网络慢时，也会先展示{{message}}，然后执行到下面的js的时候才会渲染-->
+		<span>{{message}}</span>
+		<span v-text="message"></span>
+		<span v-html="dodo"></span>
+	</div>
+	<script type="text/javascript">
+		new Vue({
+			el : '#app',
+			data : {
+				message : 'Hello World',
+				dodo : '<em>Hello World</em>'
+			}
+		});
+	</script>
+</body>
+</html>

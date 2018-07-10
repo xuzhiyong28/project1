@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>原生Ajax</title>
+</head>
+<body>
+
+<script>
+    var XHR = (function (XHRModel) {
+        XHRModel.createXHR = function () {
+            if (typeof XMLHttpRequest != 'undefined') { //正常都用这个来直接创建一个ajax
+                return new XMLHttpRequest();
+            } else if (typeof ActiveXObject != 'undefined') //下面这种试用IE7以及以下版本
+            {
+                if (typeof arguments.callee.activeXString != 'string') {
+                    var versions = ["MSXML2.XMLHttp.6.0", "MSXML2.XMLHttp.3.0", "MSXML2.XMLHttp"],
+                            i, len;
+                    for (i = 0 , len = versions.length; i < len; i++) {
+                        try {
+                            new ActiveXObject(versions[i]);
+                            arguments.callee.activeXString = versions[i];
+                            break;
+                        } catch (e) {
+                            //跳过
+                        }
+                    }
+                }
+                return new ActiveXObject(arguments.callee.activeXString);
+            } else {
+                throw new Error("101-createXHR-出现错误");
+            }
+        };
+        XHRModel.createLazyXHR = function(){
+            if(typeof XMLHttpRequest != 'undefined'){
+                XHRModel.createLazyXHR = function(){
+                    return new XMLHttpRequest();
+                }
+            }
+            else if(typeof ActiveXObject != 'undefined'){
+                if(typeof arguments.callee.activeXString != 'string'){
+                    var versions = ["MSXML2.XMLHttp.6.0", "MSXML2.XMLHttp.3.0", "MSXML2.XMLHttp"],
+                            i, len;
+                    for (var i = 0 , len = versions.length; i < len; i++) {
+                        try {
+                            new ActiveXObject(versions[i]);
+                            arguments.callee.activeXString = versions[i];
+                            break;
+                        } catch (e) {
+                            //跳过
+                        }
+                    }
+                }
+                XHRModel.createLazyXHR = function(){
+                    return new ActiveXObject(arguments.callee.activeXString);
+                }
+            }
+            else{
+                XHRModel.createLazyXHR = function(){
+                    return null;
+                }
+            }
+            return XHRModel.createLazyXHR();
+        }
+        /**
+         *
+         * @param url 请求地址
+         * @param async 是否异步
+         * @param backCall 成功回调函数
+         * @param headers 自定义上传的headers 不允许值为中文
+         */
+        XHRModel.sendByGetOrPost = function (type, url, async, backCall, headers, data) { //采用get,post方式
+            var xhr = XHRModel.createXHR();
+            type = type.toLowerCase();
+            if (typeof backCall === 'function') {
+                xhr.onreadystatechange = ajax_fn;
+            }
+            switch (type) {
+                case 'get':
+                    xhr.open('get', url, async);
+                    break;
+                case 'post':
+                    xhr.open('post', url, async);
+                    break;
+                default :
+                    break;
+            }
+
+            if (Object.prototype.toString.apply(headers) == '[object Object]') {
+                var regGBK = /^[\u4e00-\u9fa5]+$/g;
+                for (var key in headers) {
+                    if (!regGBK.test(headers[key]))
+                        xhr.setRequestHeader(key, headers[key]);
+                }
+            }
+            xhr.send(type == 'post' ? data : null);
+            function ajax_fn() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status >= 200 && xhr.status < 300 || xhr.status == 304) {
+                        backCall(xhr.responseText);
+                    } else {
+                        alert(xhr.status);
+                    }
+                }
+            };
+        };
+
+        /**
+         * 惰性载入函数
+         * 创建xml对象
+         * @param xmlStr
+         */
+        XHRModel.createXmlDoc = function (xmlStr) {
+            var xmlDoc = null;
+            if (window.DOMParser) {
+                XHRModel.createXmlDoc = function () {
+                    try {
+                        domParser = new DOMParser();
+                        xmlDoc = domParser.parseFromString(xmlStr, 'text/xml');
+                        return xmlDoc;
+                    } catch (e) {
+                        return null;
+                    }
+                }
+            }
+            else if (!window.DOMParser && window.ActiveXObject) {
+                XHRModel.createXmlDoc = function () {
+                    var xmlDomVersions = ['MSXML2.DOMDocument', 'Microsoft.XMLDOM'];
+                    if (xmlDomVersions.length == 0)
+                        return null;
+                    for (var i = 0, len = xmlDomVersions.length; i < len; i++) {
+                        try {
+                            xmlDoc = new ActiveXObject(xmlDomVersions[i]);
+                            xmlDoc.async = false;
+                            xmlDoc.loadXML(xmlStr); //loadXML方法载入xml字符串
+                            return xmlDoc;
+                        } catch (e) {
+                            return null;
+                        }
+                    }
+                }
+            }
+            else {
+                XHRModel.createXmlDoc = function () {
+                    return null;
+                }
+            }
+            return XHRModel.createXmlDoc();
+        }
+
+
+        return XHRModel;
+    })(window, window.XHR || {});
+
+    //获取json
+    XHR.sendByGetOrPost('get', 'data/data1.json', true, function (text) {
+        var json = eval("(" + text + ")");
+    }, {}, '');
+
+
+    //获取xml
+    XHR.sendByGetOrPost('post', 'data/data1.xml', true, function (textXml) {
+        var users = [];
+        var xmlDoc = XHR.createXmlDoc(textXml);
+        if(xmlDoc){
+            var userNode = xmlDoc.getElementsByTagName("user");
+            for(var i = 0 ; i < userNode.length ; i++){
+                var node = userNode[i];
+                users[i] = {
+                    id : node.getAttribute('id'),
+                    username : node.getAttribute('username'),
+                    realname : node.getAttribute('realname'),
+                    email : node.getAttribute('email')
+                }
+            }
+            console.log(JSON.stringify(users));
+        }
+    }, {}, 'name=xml');
+
+</script>
+</body>
+</html>

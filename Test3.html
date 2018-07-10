@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>JS订阅发布模式</title>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+<!--<script>
+    var obj = (function () {
+        return {
+            topics: {},
+            sub: function (topic, fn) {
+                if (!this.topics[topic])
+                    this.topics[topic] = [];
+                this.topics[topic].push(fn);
+            },
+            pub: function (topic) {
+                var arr = this.topics[topic];
+                var args = [].slice.call(arguments, 1); //将argument转成数组格式
+                if (!arr)
+                    return;
+                for (var i = 0, len = arr.length; i < len; i++) {
+                    arr[i](args);
+                }
+            },
+            unsub: function (topic, fn) {
+                var arr = this.topics[topic];
+                if (!arr)
+                    return;
+                if (typeof fn !== 'function') { //如果fn不存在或者fn不是函数(没fn时是删除所有事件)
+                    delete this.topics[topic];
+                    return;
+                }
+                for (var i = 0, len = arr.length; i < len; i++) { //有fn参数时就删除指定的fn
+                    if(arr[i] == fn)
+                        arr.splice(i,1);
+                }
+            }
+        };
+    })();
+
+    var fn1 = function (name) {
+        alert(name);
+    }
+    var fn2 = function (name) {
+        alert('name : ' + name);
+    }
+    obj.sub('xxx', fn1);
+    obj.sub('xxx', fn2);
+</script>-->
+
+
+<script>
+    (function ($) {
+        var o = $({});
+        //订阅
+        $.sub = function () {
+            o.on.apply(o, arguments);
+        }
+        //解除订阅
+        $.unsub = function () {
+            o.off.apply(o, arguments);
+        }
+        //发布
+        $.pub = function () {
+            o.trigger.apply(o, arguments);
+        }
+    })(jQuery);
+</script>
+<script>
+    $(function () {
+        var currentChecked = false;
+        //订阅主题
+        $.sub('selectCheckbox', function (e, checked) {
+            currentChecked = false;
+            if (checked)
+                $('#container').find('input:checkbox').prop('checked', true);
+            else
+                $('#container').find('input:checkbox').prop('checked', false);
+        });
+        //订阅主题
+        $.sub('addCheckbox', function () {
+            if (currentChecked)
+                $('#container').append('<input type="checkbox" checked="checked"/>');
+            else
+                $('#container').append(' <input type="checkbox" />');
+        });
+
+        //全选按钮发布主题
+        $('#selectAll').on('click', function () {
+            $.pub('selectCheckbox', [this.checked])
+        });
+
+        //新增按钮发布主题
+        $('#add').on('click', function () {
+            $.pub('addCheckbox');
+        });
+
+    });
+</script>
+<input id="selectAll" type="checkbox"/>
+<button id="add">add</button>
+<div id="container">
+    <input type="checkbox"/>
+    <input type="checkbox"/>
+    <input type="checkbox"/>
+    <input type="checkbox"/>
+</div>
+</body>
+</html>

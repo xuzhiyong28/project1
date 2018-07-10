@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>前端图片预览</title>
+    <style>
+        input{
+            display: none;
+        }
+        label{
+            color: red;
+        }
+    </style>    
+</head>
+
+<body>
+        <!-- 很多时候我们都会有图片上传的功能需求，如果我们先将图片上传到服务器，然后在将返回结果显示在前端，这样的操作性能开销太大，如果图片一多，简直要哭，而且万一还碰到了上传错误要删除的，那简直无法想象了。所以我们需要先将图片在前端展示后，然后由用户确认没有问题了，再统一上传，这样才是比较理想的。
+        
+        作者：liuyueershihao
+        链接：https://juejin.im/post/5a0545a75188254d2b6d979c ---  https://juejin.im/post/5a0545a75188254d2b6d979c
+        来源：掘金
+        著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。 -->
+        <input id="inputFile" type="file" multiple accept='image/png,image/jpeg,image/jpg,image/svg,image/gif'/>
+        <label for="inputFile">上传图片</label>
+    <script>
+         var body = document.body || document.getElementsByTagName('body')[0];
+        document.getElementById("inputFile").addEventListener('change',function(e){
+            var files = e.target.files;
+            console.log(files); //输出一个FileList对象
+            var filesArray = Array.from(files); //转成数组
+            /**
+                1. name：文件名
+                2. lastModified：文件最后一次修改时间（时间戳形式）
+                3. lastModifiedDate：文件最后一次修改时间（UNIX timestamp形式）
+                4. size： 文件大小（byte 为单位）
+                5. type：文件 MIME 类型
+            */
+            filesArray.forEach(function(item) {
+                var reader = new FileReader();
+                reader.readAsDataURL(item);
+                reader.onprogress = function(){
+                    //打印加载信息
+                    e.lengthComputable && console.log(e.loaded / e.total + '%');
+                }
+                reader.onload = function(e){
+                    var image = new Image();
+                    image.src = e.target.result; // e.target.result为图片的base64
+                    body.appendChild(image);
+                }
+                reader.error = function(){
+                    console.log('there is an error!');
+                }
+
+            });
+
+
+        },false);
+    </script>
+</body>
+
+</html>

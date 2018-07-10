@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>可切换的tab搜索框</title>
+    <style>
+        .search {margin: 0 auto 10px; position :relative} /*第一个作用在上，第二个作用与左右，第三个作用下*/
+        .search .bar
+        {
+            width: 558px; height: 64px; border: 1px solid #c40d0e; position: absolute; top:16px; left: -1px; background: #e21c01; border-radius: 5px;
+            box-shadow: 1px 2px 2px rgba(0,0,0,0.15);
+        }
+        .search .menu {  position: absolute; top:-27px; }
+        .search .menu li
+        {
+            float:left;  display: inline-block; list-style: none;/*实现li横排且没小圆点 */
+            width:78px;  border:1px solid #f8d0bf; border-bottom: none; text-align: center;
+            height:25px; line-height: 25px; /*实现字体垂直居中*/
+            font-size: 14px; cursor: pointer;/*鼠标手势*/ border-radius: 5px 5px 0 0; box-shadow: 1px 0 2px rgba(176,176,176,0.3);
+            background-color: #fff;
+        }
+        .search .menu .active
+        {
+            border:1px solid #e21c01; position: relative;top:-1px;/*设置设置relative,实现在自身位置的基础上向上偏移1px*/ height: 27px;
+            background-color: #2460e2; color: #fff; font-weight: bold; text-shadow: 2px 2px 3px rgba(0,0,0,0.25);
+        }
+        .search .form
+        {
+            position:absolute; left:39px; top:36px; z-index:3;
+        }
+        .search .form .text
+        {
+            width: 380px; height: 22px; line-height: 22px; padding:0 12px; border:none; background:#fff1ef; border-radius:3px; float: left;
+            margin-right:10px; font-size: 12px;font-family: '微软雅黑'; color: #ea7a7a; box-shadow: inset 2px 2px 3px rgba(0,0,0,0.25);
+        }
+        .search .form .btn {width: 63px; height: 24px; border: none; background-color: antiquewhite; cursor: pointer; border-radius: 5px; }
+
+    </style>
+</head>
+<body>
+    <div id="J_search" class="search">
+        <div class="bar">
+            <ul class="menu" id="menu">
+                <li class="active">选项卡1</li>
+                <li>选项卡2</li>
+                <li>选项卡3</li>
+                <li>选项卡4</li>
+                <li>选项卡5</li>
+            </ul>
+        </div>
+
+        <div id="form" class="form">
+            <form action="#">
+                <input class="text" type="text" name="content" value="例如：……" />
+                <input class="btn" type="submit" value="搜索" />
+            </form>
+        </div>
+    </div>
+<script type="text/javascript" src="jquery-1.9.1.js"></script>
+<script>
+    $(function(){
+        var aLi = $('#menu li');
+        var oText = $('#J_search').find('.form .text');
+        var arrText = [
+            '输入框文字1',
+            '输入框文字2',
+            '输入框文字3',
+            '输入框文字4',
+            '输入框文字5'
+        ];
+        var iNow = 0;
+        oText.val(arrText[iNow]);
+        $('#menu').on('click','li',function(event,index){
+            var _this = event.currentTarget; //这是一个js对象
+            $(_this).addClass('active')
+                    .siblings().removeClass('active');
+            iNow = $(_this).index();
+            oText.val(arrText[iNow]);
+        });
+
+        $('#form').on('focus','input[name=content]',function(event){
+            var $_this = $(event.currentTarget);
+            if($_this.val() == arrText[iNow])
+                $_this.val('');
+        }).on('blur','input[name=content]',function(event){
+            var $_this = $(event.currentTarget);
+            if($_this.val() === '')
+                $_this.val(arrText[iNow]);
+        });
+
+    });
+</script>
+</body>
+</html>

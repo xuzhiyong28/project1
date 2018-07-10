@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Vue</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+	<h1>mixins 实例</h1>
+	<em></em>
+	<div id="app">
+		{{num}}
+		<p><button @click="add">add</button></p>
+	</div>
+
+	<script type="text/javascript">
+		
+		Vue.mixin({
+			updated : function(){
+				console.log('全局的混入');
+			}
+		});
+
+		var addConsole = {
+			//updated生命周期函数
+			updated : function(){
+				console.log('数据发生变化,变化成了:' + this.num);
+			}
+		}
+		var app = new Vue({
+			el : '#app',
+			data : {
+				num : 1
+			},
+			methods : {
+				add : function(){
+					this.num ++ ;
+				}
+			},
+			updated : function(){
+				console.log('原生的后执行');
+			},
+			//混入这个方法，方法里面有一个生命周期函数用来监控数据变化
+			mixins : [addConsole]
+			
+		});
+
+
+	</script>
+</body>
+</html>

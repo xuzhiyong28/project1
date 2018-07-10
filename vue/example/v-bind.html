@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Vue</title>
+    <script src="../vue.js"></script>
+</head>
+<style>
+	.classA{
+		color : red;
+	}
+	.classB{
+		font-size: 30px;
+	}
+	.classC{
+		color : blue;
+	}
+</style>
+<body>
+	<h1>v-bind 实例</h1>
+	<div id="app">
+		<img v-bind:src="imgSrc"/>
+		<br>
+		<a :href="webUrl" target="_blank">链接</a> <!--缩写-->
+		<br>
+		<div v-bind:class="className">1.绑定class</div>
+		<div v-bind:class="{classC:isOk}">2.绑定class中的判断</div> <!--如果isOk是true,就采用classC样式-->
+		<div v-bind:class="[classA,classB]">3.绑定class中的数组</div>
+		<div v-bind:class="[isOk ? classA : classB]">4.绑定class中的三元运算符</div>
+		<hr>
+		<div>
+			<input type="checkbox" id="isOk" v-model="isOk"/>
+			<label for="isOk">isOk={{isOk}}</label>
+		</div>
+		<hr>
+		<div v-bind:style="{color:red,fontSize:font}">5.绑定style</div> <!--在vue中 font-size 必须写成fontSize-->
+		<div v-bind:style="styleObject">5.绑定style对象</div>
+	</div>
+	<script type="text/javascript">
+		new Vue({
+			el : '#app',
+			data : {
+				imgSrc : 'http://7xjyw1.com1.z0.glb.clouddn.com/weixinpingtai.jpg',
+				webUrl : 'http://www.baidu.com',
+				className : 'classA',
+				isOk : true,
+				classA : 'classA',
+				classB : 'classB',
+				red : 'red',
+				font : '30px',
+				styleObject : {
+					color : 'red',
+					fontSize : '30px'
+				}
+			}
+		});
+	</script>
+</body>
+</html>

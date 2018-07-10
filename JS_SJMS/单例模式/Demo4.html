@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>代理的单例模式</title>
+</head>
+<body>
+<script>
+    var CreateDiv = (function(html){
+        this.html = html;
+        this.init();
+    });
+    CreateDiv.prototype.init = function(){
+        var div = document.createElement('div');
+        div.innerHTML = this.html;
+        document.body.appendChild(div);
+    };
+    //用来创建CreateDiv的代理
+    var ProxySingletonCreateDiv = (function(){
+        var instance;
+        return function(html){
+            if(!instance){
+                instance = new CreateDiv(html);
+            }
+            return instance;
+        }
+    })();
+    var a = ProxySingletonCreateDiv('sven1');
+    var b = ProxySingletonCreateDiv('sven2');
+</script>
+</body>
+</html>

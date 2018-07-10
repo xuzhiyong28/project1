@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<title>js观察者模式</title>
+
+<head>
+    <style>
+        body {
+            margin: 30px;
+        }
+
+        #container {
+            border: 1px solid black;
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+        var ObserverPatten = (function () {
+            var Subject = function () {
+                this.observerlist = [];
+            };
+            Subject.prototype = {
+                add: function (observer) {
+                    this.observerlist.push(observer);
+                },
+                notify: function (state) {
+                    var arr = this.observerlist;
+                    for (var i = 0, len = arr.length; i < len; i++) {
+                        arr[i].update(state);
+                    }
+                },
+                remove: function (observer) {
+                    var arr = this.observerlist;
+                    for (var i = 0, len = arr.length; i < len; i++) {
+                        if (arr[i] == observer) {
+                            arr.splice(i, 1);
+                        }
+                    }
+                }
+                /*一些查找、移除、统计、清空等等函数  省略了。。。*/
+            };
+            var Observer = function () {
+            };
+            Observer.prototype = {
+                //等待被复写
+                update: function () {
+                },
+                /*...*/
+            };
+            return {
+                Subject: Subject,
+                Observer: Observer
+            };
+        })();
+    </script>
+    <script>
+        $(function () {
+
+            //缓存三个元素
+            var $selectAll = $('#selectAll');
+            var $add = $('#add');
+            var $container = $('#container');
+
+            //具体目标实现目标接口
+            $selectAll.extend(new ObserverPatten.Subject());
+            $selectAll.add($add);
+            $selectAll.click(function () {
+                $selectAll.notify(this.checked);
+            });
+
+            //观察者add实现观察者接口
+            $add.extend(new ObserverPatten.Observer());
+
+            //复写update方法
+            $add.update = function (value) {
+                this.data('checked', value);
+            }
+
+
+            $add.click(function () {
+                addCheckbox($add.data('checked'));
+            });
+            function addCheckbox(flag) {
+                var $cb;
+                if (flag) {
+                    $cb = $('<input type="checkbox" checked="checked" >');
+                } else {
+                    $cb = $('<input type="checkbox">');
+                }
+
+                //观察者复选框实现观察者接口
+                $cb.extend(new ObserverPatten.Observer());
+
+                //复写update方法
+                $cb.update = function (value) {
+                    this[0].checked = value;
+                }
+
+                //目标存入观察者
+                $selectAll.add($cb);
+                $('#container').append($cb);
+
+            }
+        })
+    </script>
+</head>
+
+<body>
+    <input id="selectAll" type="checkbox" />
+    <button id="add">add</button>
+    <div id="container">
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>售房发布订阅例子</title>
+</head>
+<body>
+<script>
+    var salesOffices = {  // 定义售楼处
+        clientList: {},
+        listen: function (key, fn) {
+            if (!this.clientList[key]) this.clientList[key] = []; //如果还没订阅此类消息，则创建一个缓存列表
+            this.clientList[key].push(fn);
+        },
+        trigger: function () {
+            var key = Array.prototype.shift.call(arguments), // 取出消息类型 这里去第一个参数，并把arguments的参数去掉第一个，所以留下了price
+                fns = this.clientList[key]; // 取出该消息对应的回调函数集合
+            if (!fns || fns.length == 0) {
+                return false;
+            }
+            for (var i = 0; i < fns.length; i++) {
+                fns[i].apply(this, arguments);
+            }
+        }
+    };
+
+    salesOffices.listen( 'squareMeter88', function( price ){ // 小明订阅 88 平方米房子的消息
+        console.log( '价格= ' + price ); // 输出： 2000000
+    });
+    salesOffices.trigger( 'squareMeter88', 2000000 );
+
+</script>
+</body>
+</html>

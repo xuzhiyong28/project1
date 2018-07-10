@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>图片呼吸灯效果</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: "Microsoft Yahei", arial, "Hiragino Sans GB", sans-serif;
+    }
+
+    .mydiv {
+        margin: 10px auto;
+        overflow: hidden;
+    }
+
+    .mydiv ul{
+        list-style: none;
+    }
+    .mydiv ul li{
+        display: inline-block;
+        width:200px;
+        height: 100px;
+        line-height: 100px;
+        list-style: none;
+        font-size: 0;
+        text-align: center;
+    }
+    .mydiv ul li img{
+        vertical-align: middle;
+        background-color: #FFF;
+        box-shadow: 0px 0px 18px rgba(0,0,0,.4);
+        -webkit-transition: all ease 1s;
+        -moz-transition: all ease 1s;
+        transition: all ease 1s
+    }
+
+    .mydiv ul li img:hover{
+        -webkit-transform: scale(1.2,1.2);
+        -moz-transform: scale(1.2,1.2);
+        -transform: scale(1.2,1.2);
+        -webkit-transition: all ease 1s;
+        -moz-transition: all ease 1s;
+        transition: all ease 1s
+    }
+
+</style>
+<body>
+<div class="mydiv">
+    <ul>
+        <li><a href="#"><img src="images/1.jpg" width="140" height="80" alt=""></a></li>
+        <li><a href="#"><img src="images/1.jpg" width="140" height="80" alt=""></a></li>
+        <li><a href="#"><img src="images/1.jpg" width="140" height="80" alt=""></a></li>
+        <li><a href="#"><img src="images/1.jpg" width="140" height="80" alt=""></a></li>
+        <li><a href="#"><img src="images/1.jpg" width="140" height="80" alt=""></a></li>
+        <li><a href="#"><img src="images/1.jpg" width="140" height="80" alt=""></a></li>
+        <li><a href="#"><img src="images/1.jpg" width="140" height="80" alt=""></a></li>
+        <li><a href="#"><img src="images/1.jpg" width="140" height="80" alt=""></a></li>
+        <li><a href="#"><img src="images/1.jpg" width="140" height="80" alt=""></a></li>
+        <li><a href="#"><img src="images/1.jpg" width="140" height="80" alt=""></a></li>
+    </ul>
+</div>
+</body>
+</html>

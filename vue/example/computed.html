@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Vue</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+	<h1>computed 实例</h1>
+	<em>为了不污染原始数据对数据进行改造输出</em>
+	<div id="app">
+		{{newPrice}}
+		<br>
+		<ul>
+			<li v-for="item in newMyList">{{item}}</li>
+		</ul>
+	</div>
+
+	<script type="text/javascript">
+
+
+		var app = new Vue({
+			el : '#app',
+			data : {
+				monety : 100,
+				myList : ['a','b','c']
+			},
+			computed : {
+				newPrice : function(){
+					return this.monety = '$' + this.monety + "美元";
+				},
+				newMyList : function(){
+					return this.myList.reverse();
+				}
+			}
+			
+		});
+
+
+	
+
+	</script>
+</body>
+</html>

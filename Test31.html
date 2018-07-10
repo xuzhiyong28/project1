@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>图片懒加载的几种写法</title>
+    <style>
+        img {
+            display: block;
+            margin-bottom: 50px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+<img src="images/loading.gif" data-src="images/1.jpg"/>
+<img src="images/loading.gif" data-src="images/2.jpg"/>
+<img src="images/loading.gif" data-src="images/3.jpg"/>
+<img src="images/loading.gif" data-src="images/4.jpg"/>
+<img src="images/loading.gif" data-src="images/5.jpg"/>
+<img src="images/loading.gif" data-src="images/1.jpg"/>
+<img src="images/loading.gif" data-src="images/2.jpg"/>
+<img src="images/loading.gif" data-src="images/3.jpg"/>
+<img src="images/loading.gif" data-src="images/4.jpg"/>
+<img src="images/loading.gif" data-src="images/5.jpg"/>
+<img src="images/loading.gif" data-src="images/1.jpg"/>
+<img src="images/loading.gif" data-src="images/1.jpg"/>
+<img src="images/loading.gif" data-src="images/1.jpg"/>
+<img src="images/loading.gif" data-src="images/1.jpg"/>
+<img src="images/loading.gif" data-src="images/1.jpg"/>
+<img src="images/loading.gif" data-src="images/1.jpg"/>
+<img src="images/loading.gif" data-src="images/1.jpg"/>
+
+<script>
+
+    //节流
+    function throttle(fn, delay, atleast) {
+        var timeout = null,
+                startTime = new Date();
+        return function () {
+            var curTime = new Date();
+            clearTimeout(timeout);
+            if (curTime - startTime >= atleast) {
+                fn();
+                startTime = curTime;
+            } else {
+                timeout = setTimeout(fn, delay);
+            }
+
+        }
+    }
+
+
+    var lazyloadImg = function () {
+        var images = document.getElementsByTagName('img');
+        var len = images.length;
+        var n = 0; //存储图片加载到的位置，避免每次都从第一张图片开始遍历
+        return function () {
+            if (n >= len) return;
+            var seeHeight = document.documentElement.clientHeight;
+            var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            for (var i = n; i < len; i++) {
+                var image = images[i];
+                if (image.offsetTop < seeHeight + scrollTop) {
+                    image.getAttribute("src") == "images/loading.gif" ? image.src = image.getAttribute('data-src') : undefined;
+                    n++;
+                }
+            }
+        }
+    }
+    var lazyload = lazyloadImg();
+    lazyload();//默认执行一次，保证没滚动前展示
+    //window.addEventListener('scroll', lazyload, false);
+    window.addEventListener('scroll', throttle(lazyload, 500, 1000), false); //采用节流方式加载图片
+</script>
+</body>
+</html>

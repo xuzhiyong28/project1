@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Vue</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+	<h1>Vue.extend 实例</h1>
+	<em>Vue.set 的作用就是在构造器外部操作构造器内部的数据、属性或者方法。比如在vue构造器内部定义了一个count为1的数据，我们在构造器外部定义了一个方法，要每次点击按钮给值加1.就需要用到Vue.set。</em>
+	<div id="app">
+		<ul>
+			<li v-for=" aa in arr">{{aa}}</li>
+		</ul>
+	</div>
+	<p><button onclick="add()">add</button></p>
+
+	<script type="text/javascript">
+		var outData = {
+			arr:['aaa','bbb','ccc']
+		}
+		var app = new Vue({
+			el : '#app',
+			data : outData
+		});
+
+		function add(){
+			//Vue.set(outData,'count',2);
+			console.log("我已经执行了");
+			//app.arr[1] = 'ddd'; 如果是数组 直接修改是没作用了。得用Vue.set
+			Vue.set(app.arr,1,'ddd');
+		}
+
+	</script>
+</body>
+</html>

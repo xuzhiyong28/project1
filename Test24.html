@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+<script>
+    //第一种方法 深度复制
+    Object.prototype.clone1 = function(){
+        var o = ( this.constructor === Array ? [] : {} );  //var o1 = new Object();
+        for(var e in this){
+            o[e] = typeof this[e] === "object" ? this[e].clone1() : this[e];
+        }
+        return o;
+    }
+
+    var o1 = {
+        message : "许志勇",
+        info : {
+            info1 : "info1",
+            info2 : "info2"
+        }
+    }
+    var o2 = o1.clone1();
+</script>
+
+
+<script>
+    //常用方式
+    function clone(obj){
+        var buf;
+        if(obj instanceof Array){
+            buf = [];
+            var i = obj.length;
+            while(i--){
+                buf[i] = clone(obj[i]);
+            }
+            return buf;
+        }
+        else if(obj instanceof Object){
+            buf = {};
+            for(var k in obj){
+                buf[k] = clone(obj[k]);
+            }
+            return buf;
+        }
+        else {
+            return obj;
+        }
+    }
+
+
+</script>
+</body>
+</html>

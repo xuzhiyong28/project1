@@ -1,0 +1,525 @@
+<html>
+<head>
+    <title>下拉框</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+
+    <style>
+        /*初始化样式*/
+        body, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul, li {
+            list-style-type: none;
+        }
+
+        /*插件样式*/
+        .beaSelect {
+            display: inline-block !important;
+            position: relative;
+            top: 0;
+            left: 0;
+            vertical-align: middle;
+            font-size: 14px;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -khtml-user-select: none;
+            user-select: none;
+        }
+
+        .beaSelect .beaSelectBox {
+            display: block;
+            position: relative;
+            top: 0;
+            left: 0;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -khtml-user-select: none;
+            user-select: none;
+        }
+
+        .beaSelect .beaSelectText {
+            background-color: #c1c1c1;
+            border: 1px solid #d1d1d1;
+            padding: 0 5px;
+            height: 100%;
+            cursor: pointer;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -khtml-user-select: none;
+            user-select: none;
+        }
+
+        .beaSelect .beaSelectList {
+            position: absolute;
+            left: 0;
+            background-color: #d1d1d1;
+            display: none;
+            overflow-x: hidden;
+        }
+
+        .beaSelect .beaSelectList ul li {
+            width: 100%;
+            overflow: hidden;
+            border-bottom: 1px solid #f1f1f1;
+            padding: 0 5px;
+            cursor: pointer;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        .beaSelect .beaSelectList ul li:hover {
+            background-color: #4390F5;
+            color: #fff;
+        }
+
+        .beaSelect .beaSelectList ul li.beaSelected {
+            background-color: #4390F5;
+            color: #fff;
+        }
+
+        .beaDisabled .beaSelectText {
+            background-color: #e1e1e1;
+            color: #999;
+        }
+
+        /*测试页面样式*/
+        .box {
+            width: 1000px;
+            margin: 30px auto;
+        }
+
+        .box select {
+            min-width: 100px;
+        }
+
+        .box p {
+            height: 24px;
+            line-height: 24px;
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+
+    </style>
+</head>
+<body>
+<div class="box">
+    <p>1.基本调用</p>
+    <select id="select1">
+        <option value="0">请选择</option>
+        <option value="1">选项1</option>
+        <option value="2">选项2</option>
+    </select>
+
+    <p>2.带回调的调用</p>
+    <select id="select2">
+        <option value="0">请选择</option>
+        <option value="1">选项1</option>
+        <option value="2">选项2</option>
+    </select>
+
+    <p>3.动态添加</p>
+    <select id="select3">
+        <option value="0">请选择</option>
+        <option value="1">选项1</option>
+        <option value="2">选项2</option>
+    </select>
+    <input type="button" id="btn" value="添加几个option"/>
+
+    <p>4.禁用状态</p>
+    <select id="select4">
+        <option value="0">请选择</option>
+        <option value="1">选项1</option>
+        <option value="2">选项2</option>
+    </select>
+    <input type="button" id="btn2" value="禁用/可用"/>
+
+    <p>5.解除插件</p>
+    <select id="select5">
+        <option value="0">请选择</option>
+        <option value="1">选项1</option>
+        <option value="2">选项2</option>
+    </select>
+    <input type="button" id="btn3" value="解除"/>
+
+    <p>6.二级联动综合应用</p>
+    <label>省份</label>
+    <select id="province">
+        <option>选择省份</option>
+    </select>
+    <label>城市</label>
+    <select id="city">
+        <option>选择城市</option>
+    </select>
+
+    <p>
+        beaSelect(option):套用插件 option可选参数 width height size(大于size个选项后出现滚动条) callback <br/>
+        beaDistory():解除插件 <br/>
+        beaUpdate():更新数据 <br/>
+        beaClear():清空插件 beaClead(true)全部清空 参数为非真时 保留第一个option 主要为有"请选择"的情况考虑 <br/>
+        插件样式可以自己定义 自由度较高
+    </p>
+</div>
+
+<script type="text/javascript" src="jquery-1.9.1.js"></script>
+<script type="text/javascript">
+    ;(function ($, window, document, undefined) {
+
+        var SELECT = function (ele, opt) {
+            this.element = ele,
+            this.defaults = {
+                width: 0,
+                height: 0,
+                size: 5
+            },
+            this.options = $.extend({}, this.defaults, opt);
+        }
+
+        SELECT.prototype = {
+
+            init: function () {
+
+                var THIS = $(this.element);//这个是Jquery对象 这里直接var THIS = this.element也表示是一个Jquery对象。有点奇怪。难道Jquery对于二层封装有处理吗
+                var _this = this; //只代SELECT函数对象实例
+                //解释一下这里为什么要用each  如果用的是class选择器，则表示多个
+                return THIS.each(function () {
+                    $(this).hide();//这里的this又要小心了，指的是each里面的 对应的jquery对象this
+                    _this.setHtml($(this));
+                    _this.hideBea();
+
+                })
+            },
+
+            setHtml: function (o) {
+                o.next(".beaSelect").remove();
+                var a = [],
+                        b = o.find("option"),
+                        w = this.options.width || o.outerWidth(),  //outerWidth()获取宽度(包括补白加边框)
+                        h = this.options.height || o.outerHeight(),
+                        c = this.options.callback, //这里获取参数里面的callback
+                        v, t, dv, dt, x = $("select").index(o), //index()获取o对象在select的第几个位置
+                        y = o.find("option:selected").index(),
+                        z = o.find("option:selected").val();
+                s = "", d = o.attr("disabled"), bea = "", size = this.options.size, _this = this, border = 0, selfad = w == o.outerWidth(true) ? true : false;
+                for (var i = 0; i < b.length; i++) {
+                    v = b.eq(i).val();
+                    t = b.eq(i).text();
+                    if (i == y) {
+                        s += "<li value='" + v + "' class='beaSelected'>" + t + "</li>";
+                    } else {
+                        s += "<li value='" + v + "'>" + t + "</li>";
+                    }
+                    //a.push({value:v,text:t});
+                }
+                //构建html结构
+                dv = o.find("option:selected").val();
+                dt = o.find("option:selected").text();
+                o.after("<span class='beaSelect' style='z-index:" + (1000000 - x) + "' data-size=" + size + " data-length=" + b.length + " selfad=" + selfad + "><div class='beaSelectBox'><div class='beaSelectText' style='line-height:" + h + "px'>" + dt + "</div><div class='beaSelectList'><ul>" + s + "</ul></div><input type='hidden' value='" + z + "' class='beaSelectValue' /></div></span>");
+                bea = o.next(".beaSelect");
+                border = parseInt(o.next(".beaSelect").find("ul li").css('borderBottomWidth')) + parseInt(o.next(".beaSelect").find("ul li").css('borderTopWidth')); //取得border-top和border-bottom
+                bea.find(".beaSelectBox").width(w).height(h).css("line-height", h + "px");
+                bea.find(".beaSelectList").width('100%').css("top", "h");
+                bea.attr("data-height", h + border);
+                if (b.length > size) {
+                    bea.find(".beaSelectBox").width(w);
+                    bea.find(".beaSelectList").width('100%').height((h + border) * size).css("overflow-y", "auto");
+                    bea.find(".beaSelectList").scrollTop(0);
+                }
+
+                if (d == "disabled" || d == false || d == "false") {
+                    bea.addClass("beaDisabled");
+                } else {
+                    bea.removeClass("beaDisabled");
+                }
+
+                bea.find(".beaSelectText").on("click", function () {
+                    $(this).next(".beaSelectList").addClass("beaListTarget");
+                    if (!$(this).parents(".beaSelect").hasClass("beaDisabled")) {  //点击外部区域 隐藏当前已经弹出的select
+                        $(".beaSelectList").each(function () {
+                            if (!$(this).hasClass("beaListTarget")) {
+                                $(this).hide();
+                            }
+                        })
+                        $(this).next(".beaSelectList").slideToggle(200).removeClass("beaListTarget");
+                    }
+                })
+
+                //绑定change事件
+                _this.valueChange(bea, o);
+                _this.dropDown();
+
+            },
+
+            valueChange: function (bea, o) {
+                var callback = this.options.callback;
+                if (callback) {
+                    bea.find(".beaSelectValue").on("change", function () {
+                        callback.call(o);
+                    })
+                }
+            },
+
+            dropDown: function () {
+
+                //模拟点击下拉
+                $(".beaSelect").off("click").on("click", "li", function () {
+                    var p = $(this).parents(".beaSelect");
+                    var l = p.find("li");
+                    var i = l.index($(this));
+                    var t = $(this).text();
+                    var v = $(this).attr("value");
+                    var iv = p.find(".beaSelectValue").val();
+                    p.find(".beaSelectList").hide();
+                    p.find(".beaSelectList .beaSelected").removeClass("beaSelected");
+                    $(this).addClass("beaSelected");
+                    p.find(".beaSelectText").text(t);
+                    p.prev("select").find("option").eq(i).prop("selected", true); //同步select选中值
+                    if (v != iv) {
+                        p.find(".beaSelectValue").val(v).trigger("change");
+                    }
+                })
+            },
+
+            hideBea: function () {
+
+                $("body").off("click").on("click", function (e) {
+                    var e = e || window.event;
+                    var elem = e.srcElement || e.target;
+                    var beaSelect = $(elem).closest(".beaSelect").length;
+                    if (!beaSelect) {
+                        $(".beaSelectList").hide();
+                    }
+                })
+            }
+
+        }
+
+        //添加到jquery插件中
+        $.fn.beaSelect = function (options) {
+            //这里的this指的是Jquery选中的元素
+            //example this = $('.a') 这两个是等价的。这里很奇怪为什么不要写成$(this)这样
+            var selecter = new SELECT(this, options);
+            return selecter.init();
+        }
+
+        $.fn.beaDistory = function () {
+            var bea = this.next(".beaSelect");
+            if (bea.length == 1) {
+                bea.remove();
+                this.show();
+            }
+        }
+
+        $.fn.beaUpdate = function () {
+
+            return this.each(function (i, e) {
+                var bea = $(this).next(".beaSelect");
+                if (bea.length == 1) {
+                    var b = $(this).find("option"),
+                            bst = $(this).find("option:selected").text(),
+                            bsv = $(this).find("option:selected").val(),
+                            bsi = $(this).find("option:selected").index(),
+                            size = bea.attr("data-size"),
+                            blh = bea.find(".beaSelectList").height(),
+                            bew = bea.width(),
+                            lh = bea.attr("data-height"),
+                            d = $(this).attr("disabled"),
+                            s = "",
+                            w = $(this).outerWidth(true),
+                            selfad = bea.attr("selfad");
+                    if (b.length > size) {
+                        bea.find(".beaSelectList").height(lh * size).css("overflow-y", "auto");
+                    } else {
+                        bea.find(".beaSelectList").height(lh * b.length);
+                    }
+                    bea.find(".beaSelectList ul").height(lh * b.length);
+                    b.each(function (index, element) {
+                        v = b.eq(index).val();
+                        t = b.eq(index).text();
+                        if (index != bsi) {
+                            s += "<li value='" + v + "'>" + t + "</li>";
+                        } else {
+                            s += "<li value='" + v + "' class='beaSelected'>" + t + "</li>";
+                        }
+                    })
+
+                    bea.find(".beaSelectList ul li").remove();
+                    bea.find(".beaSelectList ul").append(s);
+                    if (selfad) {
+                        bea.find(".beaSelectBox").width(w);
+                    }
+
+                    bea.attr("data-length", b.length);
+                    bea.find(".beaSelectText").text(bst);
+                    bea.find(".beaSelectValue").val(bsv);
+                    if (d == "disabled" || d == false || d == "false") {
+                        bea.addClass("beaDisabled");
+                    } else {
+                        bea.removeClass("beaDisabled");
+                    }
+                }
+            })
+        }
+
+        $.fn.beaClear = function (n) {
+
+            return this.each(function (i, e) {
+                var bea = $(this).next(".beaSelect");
+                if (bea.length == 1) {
+                    if (!n) {
+                        $(this).find("option").eq(0).siblings().remove();
+                    } else {
+                        $(this).find("option").remove();
+                    }
+                    $(this).beaUpdate();
+                }
+            })
+        }
+    })(jQuery, window, document);
+
+
+    $(function () {
+        //1
+        $("#select1").beaSelect({height: 30});
+        //2
+        $("#select2").beaSelect({
+            height: 30,
+            callback: function () {
+                alert("您选择的值为" + $(this).val());
+            }
+        });
+        //3
+        $("#select3").beaSelect({height: 30});
+        var time = 0; //测试只需要执行一次
+        $("#btn").click(function () {
+            if (time == 0) {
+                for (var i = 3; i < 6; i++) {
+                    $("#select3").append("<option value='" + i + "'>选项" + i + "</option>");
+                }
+                time = 1;
+            }
+            $("#select3").beaUpdate();   //执行一次beaUpdate方法  删除同理
+        })
+
+        //4
+        $("#select4").beaSelect({height: 30});
+        $("#btn2").click(function () {
+            if (!$("#select4").prop("disabled")) {
+                $("#select4").prop("disabled", true).beaUpdate();
+            } else {
+                $("#select4").prop("disabled", false).beaUpdate();
+            }
+        })
+
+        //5
+        $("#select5").beaSelect({height: 30});
+        $("#btn3").click(function () {
+            $("#select5").beaDistory();
+        })
+
+        //6
+        var p = new Array();
+        p[1] = "北京";
+        p[2] = "上海";
+        p[3] = "天津";
+        p[4] = "重庆";
+        p[5] = "河北";
+        p[6] = "山西";
+        p[7] = "内蒙古 ";
+        p[8] = "辽宁 ";
+        p[9] = "吉林";
+        p[10] = "黑龙江 ";
+        p[11] = "江苏";
+        p[12] = "浙江";
+        p[13] = "安徽";
+        p[14] = "福建";
+        p[15] = "江西";
+        p[16] = "山东";
+        p[17] = "河南";
+        p[18] = "湖北";
+        p[19] = "湖南";
+        p[20] = "广东";
+        p[21] = "广西";
+        p[22] = "海南";
+        p[23] = "四川";
+        p[24] = "贵州";
+        p[25] = "云南";
+        p[26] = "西藏";
+        p[27] = "陕西";
+        p[28] = "甘肃";
+        p[29] = "宁夏";
+        p[30] = "青海";
+        p[31] = "新疆";
+        p[32] = "香港";
+        p[33] = "澳门";
+        p[34] = "台湾";
+
+        var c = new Array();
+        c[1] = new Array("东城", "西城", "崇文", "宣武", "朝阳", "丰台", "石景山", "海淀", "门头沟", "房山", "通州", "顺义", "昌平", "大兴", "平谷", "怀柔", "密云", "延庆");
+        c[2] = new Array("黄浦", "卢湾", "徐汇", "长宁", "静安", "普陀", "闸北", "虹口", "杨浦", "闵行", "宝山", "嘉定", "浦东", "金山", "松江", "青浦", "南汇", "奉贤", "崇明");
+        c[3] = new Array("和平", "东丽", "河东", "西青", "河西", "津南", "南开", "北辰", "河北", "武清", "红挢", "塘沽", "汉沽", "大港", "宁河", "静海", "宝坻", "蓟县");
+        c[4] = new Array("万州", "涪陵", "渝中", "大渡口", "江北", "沙坪坝", "九龙坡", "南岸", "北碚", "万盛", "双挢", "渝北", "巴南", "黔江", "长寿", "綦江", "潼南", "铜梁", "大足", "荣昌", "壁山", "梁平", "城口", "丰都", "垫江", "武隆", "忠县", "开县", "云阳", "奉节", "巫山", "巫溪", "石柱", "秀山", "酉阳", "彭水", "江津", "合川", "永川", "南川");
+        c[5] = new Array("石家庄", "邯郸", "邢台", "保定", "张家口", "承德", "廊坊", "唐山", "秦皇岛", "沧州", "衡水");
+        c[6] = new Array("太原", "大同", "阳泉", "长治", "晋城", "朔州", "吕梁", "忻州", "晋中", "临汾", "运城");
+        c[7] = new Array("呼和浩特", "包头", "乌海", "赤峰", "呼伦贝尔盟", "阿拉善盟", "哲里木盟", "兴安盟", "乌兰察布盟", "锡林郭勒盟", "巴彦淖尔盟", "伊克昭盟");
+        c[8] = new Array("沈阳", "大连", "鞍山", "抚顺", "本溪", "丹东", "锦州", "营口", "阜新", "辽阳", "盘锦", "铁岭", "朝阳", "葫芦岛");
+        c[9] = new Array("长春", "吉林", "四平", "辽源", "通化", "白山", "松原", "白城", "延边");
+        c[10] = new Array("哈尔滨", "齐齐哈尔", "牡丹江", "佳木斯", "大庆", "绥化", "鹤岗", "鸡西", "黑河", "双鸭山", "伊春", "七台河", "大兴安岭");
+        c[11] = new Array("南京", "镇江", "苏州", "南通", "扬州", "盐城", "徐州", "连云港", "常州", "无锡", "宿迁", "泰州", "淮安");
+        c[12] = new Array("杭州", "宁波", "温州", "嘉兴", "湖州", "绍兴", "金华", "衢州", "舟山", "台州", "丽水");
+        c[13] = new Array("合肥", "芜湖", "蚌埠", "马鞍山", "淮北", "铜陵", "安庆", "黄山", "滁州", "宿州", "池州", "淮南", "巢湖", "阜阳", "六安", "宣城", "亳州");
+        c[14] = new Array("福州", "厦门", "莆田", "三明", "泉州", "漳州", "南平", "龙岩", "宁德");
+        c[15] = new Array("南昌市", "景德镇", "九江", "鹰潭", "萍乡", "新馀", "赣州", "吉安", "宜春", "抚州", "上饶");
+        c[16] = new Array("济南", "青岛", "淄博", "枣庄", "东营", "烟台", "潍坊", "济宁", "泰安", "威海", "日照", "莱芜", "临沂", "德州", "聊城", "滨州", "菏泽");
+        c[17] = new Array("郑州", "开封", "洛阳", "平顶山", "安阳", "鹤壁", "新乡", "焦作", "濮阳", "许昌", "漯河", "三门峡", "南阳", "商丘", "信阳", "周口", "驻马店", "济源");
+        c[18] = new Array("武汉", "宜昌", "荆州", "襄樊", "黄石", "荆门", "黄冈", "十堰", "恩施", "潜江", "天门", "仙桃", "随州", "咸宁", "孝感", "鄂州");
+        c[19] = new Array("长沙", "常德", "株洲", "湘潭", "衡阳", "岳阳", "邵阳", "益阳", "娄底", "怀化", "郴州", "永州", "湘西", "张家界 ");
+        c[20] = new Array("广州", "深圳", "珠海", "汕头", "东莞", "中山", "佛山", "韶关", "江门", "湛江", "茂名", "肇庆", "惠州", "梅州", "汕尾", "河源", "阳江", "清远", "潮州", "揭阳", "云浮");
+        c[21] = new Array("南宁", "柳州", "桂林", "梧州", "北海", "防城港", "钦州", "贵港", "玉林", "南宁地区", "柳州地区", "贺州", "百色", "河池");
+        c[22] = new Array("海口", "三亚", "琼海", "文昌", "万宁", "儋州", "东方", "五指山");
+        c[23] = new Array("成都", "绵阳", "德阳", "自贡", "攀枝花", "广元", "内江", "乐山", "南充", "宜宾", "广安", "达川", "雅安", "眉山", "甘孜", "凉山", "泸州");
+        c[24] = new Array("贵阳", "六盘水", "遵义", "安顺", "铜仁", "黔西南", "毕节", "黔东南", "黔南");
+        c[25] = new Array("昆明", "大理", "曲靖", "玉溪", "昭通", "楚雄", "红河", "文山", "思茅", "西双版纳", "保山", "德宏", "丽江", "怒江", "迪庆", "临沧");
+        c[26] = new Array("拉萨", "日喀则", "山南", "林芝", "昌都", "阿里", "那曲");
+        c[27] = new Array("西安", "宝鸡", "咸阳", "铜川", "渭南", "延安", "榆林", "汉中", "安康", "商洛");
+        c[28] = new Array("兰州", "嘉峪关", "金昌", "白银", "天水", "酒泉", "张掖", "武威", "定西", "陇南", "平凉", "庆阳", "临夏", "甘南");
+        c[29] = new Array("银川", "石嘴山", "吴忠", "固原");
+        c[30] = new Array("西宁", "海东", "海南", "海北", "黄南", "玉树", "果洛", "海西");
+        c[31] = new Array("乌鲁木齐", "石河子", "克拉玛依", "伊犁", "巴音郭勒", "昌吉", "克孜勒苏柯尔克孜", "博尔塔拉", "吐鲁番", "哈密", "喀什", "和田", "阿克苏 ");
+        c[32] = new Array("香港特别行政区 ");
+        c[33] = new Array("澳门特别行政区 ");
+        c[34] = new Array("台北", "高雄", "台中", "台南", "屏东", "南投", "云林", "新竹", "彰化", "苗栗", "嘉义", "花莲", "桃园", "宜兰", "基隆", "台东", "金门", "马祖", "澎湖");
+
+        for (var i = 1; i < p.length; i++) {
+            $("#province").append("<option value='" + i + "'>" + p[i] + "</option>");
+        }
+
+        $("#city").beaSelect({size: 4, height: 30});
+        $("#province").beaSelect({
+            size: 4,
+            height: 30,
+            callback: function () {
+                var province = $(this).val();
+                $("#city").beaClear();
+                if (c[province]) {
+                    for (var j = 0; j < c[province].length; j++) {
+                        $("#city").append("<option value='" + j + "'>" + c[province][j] + "</option>");
+                    }
+                    $("#city").beaUpdate();
+                }
+            }
+        });
+
+    })
+</script>
+</body>
+</html>

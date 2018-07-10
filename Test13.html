@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>瀑布流</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .div1 {
+        width: 1060px;
+        margin: 0 auto;
+    }
+
+    .title {
+        text-align: center;
+        line-height: 30px;
+        font-size: 20px;
+        padding: 20px 0;
+    }
+
+    .div1 ul {
+        width: 202px;
+        margin: 0 5px;
+        float: left;
+        list-style: none;
+    }
+
+    .div1 ul li {
+        width: 180px;
+        padding: 10px;
+        background: #fc0;
+        margin-bottom: 10px;
+    }
+
+    .div1 ul li img {
+        width: 100%;
+    }
+
+    .div1 ul li p {
+        text-align: center;
+        line-height: 24px;
+        font-size: 14px;
+    }
+
+    #loading {
+        width: 1280px;
+        height: 40px;
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        margin-left: -640px;
+        text-align: center;
+        display: none;
+        z-index: 2;
+    }
+</style>
+
+<body>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+        var Flow = (function ($) {
+            var fn = function (opts) {
+                this.obj = document.getElementById(opts.ele);
+                this.load = document.getElementById(opts.load);
+                this.ulength = opts.ulength;
+                if (this.obj)
+                    this.init();
+            };
+            fn.prototype.init = function () {
+                this.obj.style.width = (this.ulength * 212) + "px";
+
+                for (var i = 0; i < this.ulength; i++) {
+                    var oUI = document.createElement("ul");
+                    this.obj.appendChild(oUI);
+                }
+                this.aUI = this.obj.children;
+                this.iPage = 1;
+                this.bSign = true;
+                this.getPage(1);
+                this.resize();
+            };
+
+            fn.prototype.getPage = function (n) {
+                var _this = this;
+                this.ajax({
+                    url: 'http://pingfan1990.sinaapp.com/javacript/wall/jsonpdata.php?name=pingfan',
+                    type: 'jsonp',
+                    data: { page: n },
+                    cbName: 'callback',
+                    success: function (json) {
+                        _this.bSign = true;
+                        _this.load.style.display = 'none';
+                        if (json.length == 0) {
+                            alert('已经到最后一页了！');
+                            return;
+                        } else {
+                            for (var i = 0; i < json.length; i++) {
+                                (function (index) {
+                                    var oLi = document.createElement('li');
+                                    oLi.innerHTML = '<img src="http://pingfan1990.sinaapp.com/javacript/wall/' + json[index].image + '" alt="' + json[index].alt + '"><p>' + json[index].title + '</p>';
+                                    var arr = [];
+                                    for (var j = 0; j < _this.aUI.length; j++) {
+                                        arr[j] = _this.aUI[j];
+                                    }
+                                    //进行排序，取距离文档结构具体最小的插入 关键
+                                    arr.sort(function (ul1, ul2) {
+                                        return ul1.offsetHeight - ul2.offsetHeight;
+                                    });
+                                    arr[0].appendChild(oLi);
+                                })(i);
+                            }
+                        }
+                    }
+                });
+            };
+            fn.prototype.ajax = function (json) {
+                var timer = null;
+                json = json || {};
+                if (!json.url) {
+                    alert("参数错误");
+                    return;
+                }
+                json.type = json.type || 'get';
+                json.data = json.data || {};
+                json.time = json.time || 5;
+                json.cbName = json.cbName || 'cb';
+                if (window.XMLHttpRequest) {
+                    var oAjax = new XMLHttpRequest();
+                } else {
+                    var oAjax = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+
+                switch (json.type.toLocaleLowerCase()) {
+                    case 'get':
+                        oAjax.open('GET', json.url + '?' + json_url(json.data), true);
+                        oAjax.send();
+                        oAjax.onreadystatechange = ajax_fn;
+                        break;
+                    case 'post':
+                        oAjax.open('POST', json.url, true);
+                        oAjax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                        oAjax.send(json_url(json.data));
+                        oAjax.onreadystatechange = ajax_fn;
+                        break;
+                    case 'jsonp':
+                        var fnName = 'my_jsonp' + Math.random();
+                        fnName = fnName.replace('.', '');
+                        window[fnName] = function (json_data) {
+                            clearTimeout(timer);
+                            json.success && json.success(json_data);
+
+                            oHead.removeChild(oS);
+                        }
+                        json.data[json.cbName] = fnName;
+                        var oS = document.createElement('script');
+                        oS.src = json.url + '?' + this.jsonUrl(json.data);
+                        var oHead = document.getElementsByTagName('head')[0];
+                        oHead.appendChild(oS);
+                        break;
+                }
+                json.loadingFn && json.loadingFn();
+                function ajax_fn() {
+                    if (oAjax.readyState == 4) {
+                        if (oAjax.status >= 200 && oAjax.status < 300 || oAjax.status == 304) {
+                            clearTimeout(timer);
+                            json.success && json.success(oAjax.responseText);
+                        } else {
+                            clearTimeout(timer);
+                            json.error && json.error(oAjax.status);
+                        }
+                    }
+                }
+                function json_url(data) {
+                    var result = "";
+                    for (var key in data) {
+                        result += key + "=" + data[key];
+                    }
+                    return result.substring(0, result.length - 1);
+                }
+                timer = setTimeout(function () {
+                    alert('网络超时');
+                    oAjax.onreadystatechange = null;
+                }, json.time * 1000);
+            };
+
+
+            fn.prototype.resize = function () {
+                var _this = this;
+
+                window.onscroll = window.onresize = function () {
+                    var scrollT = document.documentElement.scrollTop || document.body.scrollTop;
+
+                    if (scrollT == document.body.scrollHeight - document.documentElement.clientHeight) {
+                        if (_this.bSign == false) return;
+
+                        _this.bSign = false;
+
+                        _this.iPage++;
+
+                        _this.getPage(_this.iPage);
+                    }
+                };
+            };
+
+
+            fn.prototype.jsonUrl = function (json) {
+                json.t = Math.random();
+                var arr = [];
+                for (var name in json) {
+                    arr.push(name + '=' + json[name]);
+                }
+                return arr.join('&');
+            };
+            return fn;
+        })(jQuery);
+
+    </script>
+    <script>
+        window.onload = function () {
+            var flow = new Flow({
+                ele: 'box',
+                load: 'loading',
+                ulength: 6 //表示有几列
+            });
+        }
+
+    </script>
+    <p class="title">瀑布流</p>
+
+    <div id="box" class="div1"></div>
+    <p id="loading"><img src="http://pingfan1990.sinaapp.com/javacript/wall/images/loading.gif"></p>
+
+</body>
+
+</html>

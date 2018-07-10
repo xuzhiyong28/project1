@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>setTimeout(function(){},0)的一些妙用</title>
+</head>
+
+<body>
+
+    <h1><code>DEMO1</code></h1>
+
+    <h2>1、未使用 <code>setTimeout</code>（未选中文本框内容）</h2>
+
+    <button id="makeinput">生成 input</button>
+    <p id="inpwrapper"></p>
+
+    <h2>2、使用 <code>setTimeout</code>（立即选中文本框内容）</h2>
+
+    <button id="makeinput2">生成 input</button>
+    </h2>
+    <p id="inpwrapper2"></p>
+
+
+    <div style="color: red;">
+        结果 ：
+        <br> 未使用setTimeout的情况:只会生成文本框，后续的步骤焦点设置在文本框上，并选中所有内容不会被执行
+    </div>
+
+
+
+
+    <h1><code>DEMO2</code></h1>
+
+    <h2>1、未使用 <code>setTimeout</code>(只有输入第二个字符时，前一个字符才显示出来)</h2>
+    <input type="text" id="input1" value="" />
+
+    <div id="preview1"></div>
+    <h2>2、使用 <code>setTimeout</code>(输入时，字符同时显示出来)</h2>
+    <input type="text" id="input2" value="" />
+
+    <div id="preview2"></div>
+    <div style="color: red;">
+        现有的 JavaScript 引擎是单线程处理任务的。 它把任务放到队列中，不会同步去执行，必须在完成一个任务后才开始另外一个任务。 其实，这是一个把需要执行的任务从队列中跳脱的技巧。 在DEMO1中，JavaScript 引擎在执行 onmousedown时，由于没有多线程的同步执行，不可能同时去处理刚创建元素的
+        focus 和 select 方法， 由于这两个方法都不在队列中，在完成 onmousedown 后，JavaScript 引擎已经丢弃了这两个任务，正如第一种情况。 而在第二种情况中，由于setTimeout可以把任务从某个队列中跳脱成为新队列，因而能够得到期望的结果。
+        <br> js引擎与GUI引擎是互斥的,也就是说同一个时间，要嘛是js引擎在执行，要嘛是GUI在进行渲染。在js中的渲染操作是异步的。 比如dom操作的代码会在事件队列中生成一个任务,js执行到这个任务时就会去调用GUI引擎渲染。
+        js语言设定js引擎与GUI引擎是互斥的,也就是说GUI引擎在渲染时会阻塞js引擎计算.原因很简单,如果在GUI渲染的时候,js改变了dom,那么就会造成渲染不同步.
+        <br>
+        <!--
+        document.body.innerHTML = '渲染好了就出来吧';
+        while(true){
+            console.log(document.body.innerHTML);
+        }
+        这段代码中，js已经执行了innerHTML,这时候body里面已经有了'渲染好了就出来吧'。但是由于下面的死循环一直在执行js，导致了GUI没有机会去渲染。
+    -->
+    </div>
+
+
+
+
+
+
+
+
+
+    <script type="text/javascript" src="jquery-1.9.1.js"></script>
+    <script>
+        (function () {
+
+            function get(id) {
+                return document.getElementById(id);
+            }
+
+            window.onload = function () {
+                get('makeinput').onmousedown = function () {
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'text');
+                    input.setAttribute('value', 'test1');
+                    get('inpwrapper').appendChild(input);
+                    input.focus();
+                    input.select();
+                }
+                get('makeinput2').onmousedown = function () {
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'text');
+                    input.setAttribute('value', 'test1');
+                    get('inpwrapper2').appendChild(input);
+                    setTimeout(function () {
+                        input.focus();
+                        input.select();
+                    }, 0);
+                }
+                get('input1').onkeypress = function () {
+                    get('preview1').innerHTML = this.value;
+                }
+                get('input2').onkeypress = function () {
+                    setTimeout(function () {
+                        get('preview2').innerHTML = get('input2').value;
+                    }, 0);
+                }
+            }
+        })();
+    </script>
+</body>
+
+</html>

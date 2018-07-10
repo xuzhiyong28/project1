@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>观察者模式--一个事件就能被触发，同时去提醒另一个部分</title>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body>
+<script>
+    var Subject = function () {
+        this.observers = [];
+    }
+    Subject.prototype.pushObserver = function (observer) {
+        this.observers.push(observer);
+    }
+    Subject.prototype.spliceObserver = function (observer) {
+        var index = this.observers.index(observer);
+        index > -1 && this.observers.splice(index, 1);
+    }
+    Subject.prototype.notifyObserver = function (observer) {
+        var index = this.observers.indexOf(observer);
+        index > -1 && this.observers[index].notify(index);
+    };
+    Subject.prototype.notifyAllObservers = function () {
+        for (var i = 0; i < this.observers.length; i++) {
+            this.observers[i].notify(i);
+        }
+    };
+
+    var Observer = function(){
+        return {
+            notify : function(index){
+                console.log("Observer " + index + " is notified!");
+            }
+        }
+    }
+
+    var subject = new Subject();
+    var observer0 = new Observer();
+    var observer1 = new Observer();
+    var observer2 = new Observer();
+    var observer3 = new Observer();
+
+    subject.pushObserver(observer0);
+    subject.pushObserver(observer1);
+    subject.pushObserver(observer2);
+    subject.pushObserver(observer3);
+    subject.notifyObserver(observer2); //observer不做通知
+    subject.notifyAllObservers();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用高阶函数动态创建代理</title>
+</head>
+<body>
+<script>
+    var mult = function () {
+        console.log('开始计算乘积');
+        var a = 1;
+        for (var i = 0; i < arguments.length; i++) {
+            a = a * arguments[i];
+        }
+        return a;
+    }
+    var add = function () {
+        console.log('开始计算乘积');
+        var a = 0;
+        for (var i = 0; i < arguments.length; i++) {
+            a = a + arguments[i];
+        }
+        return a;
+    }
+
+    var createProxyFactory = function (fn) {
+        var cache = {};
+        return function () {
+            var args = Array.prototype.join.call(arguments, ',');
+            console.log(cache);
+            if (args in cache) {
+                return cache[args]; //如果入参的接口已经存在了，就不要在计算，直接返回
+            }
+            return cache[args] = fn.apply(this, arguments);
+        }
+    };
+    var proxyMult = createProxyFactory(mult);
+    var proxyAdd = createProxyFactory(add);
+    alert(proxyMult(1, 2, 3, 4)); // 输出：24
+    alert(proxyAdd(1, 2, 3, 4)); // 输出：10
+
+</script>
+</body>
+</html>

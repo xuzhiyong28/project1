@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>常用javasrcipt-util封装</title>
+</head>
+
+<body>
+    <input type="text" id="inputDom" class="red" />
+    <script type="text/javascript">
+        var jsUtil = (function () {
+            var classUtil = {
+                /**
+                 * 
+                 * @desc 判断元素是否有某个class
+                 * @param {HTMLElement} ele 元素DOM
+                 * @param {String} cls 样式
+                 * @return {Boolean}
+                 */
+                hasClass: function (className, cls) {
+                    var regExp = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+                    return regExp.test(className);
+                },
+                addClass: function (ele, cls) {
+                    if (!this.hasClass(ele.className, cls))
+                        ele.className += ' ' + cls;
+                },
+                removeClass: function (ele, cls) {
+                    if (this.hasClass(ele.className, cls)) {
+                        var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+                        ele.className = ele.className.replace(reg, ' ');
+                    }
+                }
+            };
+            var deviceUtil = {
+                /**
+                 * @desc 获取浏览器类型和版本
+                 * @return {String} 
+                 */
+                getExplore: function () {
+                    var sys = {}, ua = navigator.userAgent.toLowerCase(), s;
+                    (s = ua.match(/rv:([\d.]+)\) like gecko/)) ? sys.ie = s[1] :
+                        (s = ua.match(/msie ([\d\.]+)/)) ? sys.ie = s[1] :
+                            (s = ua.match(/edge\/([\d\.]+)/)) ? sys.edge = s[1] :
+                                (s = ua.match(/firefox\/([\d\.]+)/)) ? sys.firefox = s[1] :
+                                    (s = ua.match(/(?:opera|opr).([\d\.]+)/)) ? sys.opera = s[1] :
+                                        (s = ua.match(/chrome\/([\d\.]+)/)) ? sys.chrome = s[1] :
+                                            (s = ua.match(/version\/([\d\.]+).*safari/)) ? sys.safari = s[1] : 0;
+                    // 根据关系进行判断
+                    if (sys.ie) return ('IE: ' + sys.ie)
+                    if (sys.edge) return ('EDGE: ' + sys.edge)
+                    if (sys.firefox) return ('Firefox: ' + sys.firefox)
+                    if (sys.chrome) return ('Chrome: ' + sys.chrome)
+                    if (sys.opera) return ('Opera: ' + sys.opera)
+                    if (sys.safari) return ('Safari: ' + sys.safari)
+                    return 'Unkonwn';
+                },
+                /**
+                * 
+                * @desc 获取操作系统类型
+                * @return {String} 
+                */
+                getOS: function () {
+                    var vendor = 'navigator' in window && 'vendor' in navigator && navigator.vendor.toLowerCase() || '';
+                    var appVersion = 'navigator' in window && 'appVersion' in navigator && navigator.appVersion.toLowerCase() || '';
+                    if (/mac/i.test(appVersion)) return 'MacOSX';
+                    if (/win/i.test(appVersion)) return 'windows';
+                    if (/linux/i.test(appVersion)) return 'linux';
+                    if (/iphone/i.test(userAgent) || /ipad/i.test(userAgent) || /ipod/i.test(userAgent)) 'ios';
+                    if (/android/i.test(userAgent)) return 'android';
+                    if (/win/i.test(appVersion) && /phone/i.test(userAgent)) return 'windowsPhone';
+                }
+            };
+            
+            var objectUtil = {
+                /**
+                * @desc 判断类型
+                * @param keyData 
+                * @return {String} 
+                */
+                getTheKeyType: function (keyData) {
+                    var type = Object.prototype.toString.apply(keyData);
+                    var result;
+                    switch (type) {
+                        case '[object Object]':
+                            result = 'object';
+                            break;
+                        case '[object Array]':
+                            result = 'array';
+                            break;
+                        case '[object String]':
+                            result = 'string';
+                            break;
+                        case '[object Function]':
+                            result = 'function';
+                            break;
+                        case '[object Number]':
+                            result = 'number';
+                            break;
+                        case '[object Boolean]':
+                            result = 'boolean';
+                            break;
+                        case '[object Null]':
+                            result = 'null';
+                            break;
+                        default:
+                            result = 'undefined';
+                            break;
+                    }
+                    return result;
+                },
+                /***
+                * 判断是否是空对象 return true|空对象;false|不是空对象
+                ***/
+                isEmptyObject : function(obj){
+                    if(!obj || typeof obj !== 'object' || Array.isArray(obj))
+                        return false;
+                    return !Object.keys(obj).length;    
+                },
+                /**
+                * @desc 深拷贝，支持常见类型
+                * @param {Any} values
+                */
+                deepClone : function(values){
+                    var copy;
+                    if(null == values || "object" != typeof values) return values; //不是对象的情况直接返回值
+                    //日期的处理
+                    if(values instanceof Date){
+                        copy = new Date();
+                        copy.setTime(values.getTime());
+                        return copy;
+                    }
+                    //数组的处理
+                    if(values instanceof Array){
+                        copy = [];
+                        for(var i = 0 , len = values.length ; i < len ; i++){
+                            copy[i] = arguments.callee(values[i]);
+                        }
+                        return copy;
+                    }
+                    //Object的处理
+                    if(values instanceof Object){
+                        copy = {};
+                        for(var attr in values){
+                            if(values.hasOwnProperty(attr)) copy[attr] = arguments.callee(values[attr]);
+                        }
+                        return copy;
+                    }
+                    throw new Error("Unable to copy values! Its type isn't supported.");
+                },
+                /**
+                *   比较两个对象是否相等
+                */
+                isObjEqual : function(obj1,obj2){
+                    if(objectUtil.getTheKeyType(obj1) == 'null' || objectUtil.getTheKeyType(obj1) == 'undefined')
+                        throw new Error('obj1的值为空');
+                    if(objectUtil.getTheKeyType(obj2) == 'null' || objectUtil.getTheKeyType(obj2) == 'undefined')
+                        throw new Error('obj1的值为空');
+                    if(objectUtil.getTheKeyType(obj1) !== objectUtil.getTheKeyType(obj2)) //对象不等，退出
+                        return false;        
+                    if("object" != typeof obj1) //当不是对象时候，直接判断取值 
+                        return obj1 === obj2; 
+                    else{
+                        if(Object.keys(obj1).length != Object.keys(obj2).length) 
+                            return false;
+                        for(var key in obj1){
+                            if(!obj1.hasOwnProperty(key) || !obj2.hasOwnProperty(key)) 
+                                return false;
+                            var flag = arguments.callee(obj1[key],obj2[key]);
+                            if(flag == false)
+                                return false;
+                        }
+                    }
+                    return true;
+                },
+                //判断对象obj1是否包含obj2(obj1里面的值是否在obj2里面都有且相等)
+                isObj1containsObj2 : function(obj1,obj2){
+                    if(objectUtil.getTheKeyType(obj1) !== objectUtil.getTheKeyType(obj2)) //对象不等，退出
+                        return false;
+                    if("object" != typeof obj1 || "object" != typeof obj2) //当不是对象时候，直接判断取值 
+                        return obj1 == obj2;
+                    else{
+                        for(var key in obj1){
+                            var flag = arguments.callee(obj1[key],obj2[key]);
+                            if(flag == false)
+                                return false;
+                        }
+                    }
+                    return true;
+                },
+                /**
+                * 
+                * @desc   对象序列化
+                * @param  {Object} obj 
+                * @return {String}
+                */
+                stringfyQueryString : function(obj){
+                    if(!obj) return '';
+                    var pairs = [];
+                    for(var key in obj){
+                        var value = obj[key];
+                        if(value instanceof Array){
+                            for (var i = 0; i < value.length; ++i) {
+                                pairs.push(encodeURIComponent(key + '[' + i + ']') + '=' + encodeURIComponent(value[i]));
+                            }
+                            continue;
+                        }
+                        pairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
+                    }
+                    return pairs.join('&');
+                }
+            };
+            var ramdomUtil = {
+                /**
+                * 
+                * @desc 生成指定范围随机数
+                * @param  {Number} min 
+                * @param  {Number} max 
+                * @return {Number} 
+                */
+                randomNum : function(min,max){
+                    return Math.floor(min + Math.random() * (max - min));
+                },
+                randomColor : function(){
+                    return '#' + ('00000' + (Math.random() * 0x1000000 << 0).toString(16)).slice(-6);
+                }
+            };
+
+            var stringUtil = {
+                /**
+                * 
+                * @desc   现金额转大写
+                * @param  {Number} n 
+                * @return {String}
+                * @desc Math.floor(x) 方法返回小于等于x的最大整数。
+                * @desc Math.pow(x,y) 方法可返回 x 的 y 次幂的值。
+                */
+                digitUppercase : function(n){
+                    var fraction = ['角', '分'];
+                    var digit = ['零', '壹', '贰', '叁', '肆','伍', '陆', '柒', '捌', '玖'];
+                    var unit = [['元', '万', '亿'],['', '拾', '佰', '仟']];
+                    var head = n < 0 ? '欠' : '';
+                    n = Math.abs(n); //取绝对值
+                    var s = '';
+                    for(var i = 0 ; i < fraction.length ; i++){
+                        s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, '');
+                    }
+                    s = s || '整';
+                    n = Math.floor(n); //去掉小数部分
+                    for(var i = 0 ; i < unit[0].length && n > 0 ; i++){
+                        var p = '';
+                        for (var j = 0; j < unit[1].length && n > 0; j++) {
+                            p = digit[n % 10] + unit[1][j] + p;
+                            n = Math.floor(n / 10);
+                        }
+                        s = p.replace(/(零.)*零$/, '').replace(/^$/, '零') + unit[0][i] + s;
+                    }
+                    return head + s.replace(/(零.)*零元/, '元')
+                        .replace(/(零.)+/g, '零')
+                        .replace(/^整$/, '零元整');
+                }
+            }
+
+            return {
+                classUtil: classUtil, //dom添加，删除，判断是否有class
+                deviceUtil: deviceUtil, //获取浏览器，操作系统版本
+                objectUtil : objectUtil, //对象方法 判断是否是空对象|对象类型|深度复制|对象比较
+                ramdomUtil : ramdomUtil, //随机数函数 生产范围内的随机数|随意生成颜色
+                stringUtil : stringUtil //  现金额转大写
+            }
+        })();
+
+       
+        var obj1 = {"blms":"3","clzt":0,"czgy":"40637","czgydm":"zlf8","czzd":"0:0:0:0:0:0:0:1","dlbz":"","dlms":"","dlr_khmc":"","dlr_xydqrq":"","dlr_xyqsrq":"","dlr_zjbh":"","dlr_zjjzrq":"","dlr_zjlb":"","dlr_zjqsrq":"","dlrbh":"","dlxydaid":"","fqqd":"4","fqr":"40637","fsyyb":"3106","fxdj_show":"稳健型","gydm":"40637","gyflmc":"普通柜员","ifwzhyds":"1","khh":"03000003536982","khjc":"混沌魔像","khlb":"0","khmc":"混沌魔像","khzt_show":"正常","method":"4","rhbsbz":"1","sfrzqd":"0","sfrzqd_dlr":"0","wfstartdate":"20180207","wfstarttime":"10:54:32","wmyw":"","xycplb":"","yhth":"860011738899","ywbz":"123123\t","ywdm":"20018","yyb":"3106","zdfxlb":"0","zjbh":"340303198801050017","zjjzrq_show":"30001231","zjlb":"0","zjqsrq_show":"20130104","zytzzdj":"0","ywqqid":39399,"czyybdm":"3106","yybdm":"3106","czbz":"YGT","ywsl_flag":"0"};
+
+       	
+        var str = JSON.stringify(obj1);
+        alert(str.replace(/\\t+/g,''));
+    
+
+
+      
+    </script>
+</body>

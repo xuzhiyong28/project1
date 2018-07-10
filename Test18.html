@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>validate校验</title>
+    <link rel="stylesheet" type="text/css" href="js/validate/jquery.validate.css"/>
+    <script type="text/javascript" src="jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="js/validate/jquery.metadata.js"></script>
+    <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/validate/localization/messages_zh.js"></script>
+    <script type="text/javascript" src="js/validate/jquery.validate.methods.js"></script>
+
+</head>
+<body>
+    <form id="sqxxForm">
+        <input type="text" name="myName" class="{required:true}" />
+    </form>
+
+<script type="text/javascript">
+    var validator = $("#sqxxForm").validate({
+        ignoreTitle: true,
+        error : function(label,element){
+
+        },
+        success:function(label,element){
+            $(element).removeClass('error');
+        },
+        errorPlacement: function(error, element){
+            element.attr("title",error.text());
+        }
+    });
+</script>
+</body>
+
+</html>

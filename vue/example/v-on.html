@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Vue</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+	<h1>v-on 实例</h1>
+	<div id="app">
+		本场比赛得分:{{fenshu}}
+		<p>
+			<button v-on:click="jiafen">加分</button>
+			<button @click="jianfen">减分</button>
+			<!--v-model 绑定数据源 功能:按回车来进行加法-->
+			<input type="text" v-on:keyup.13="onEnter" v-model="fenshu2"/>
+		</p>
+	</div>
+	<script type="text/javascript">
+		new Vue({
+			el : '#app',
+			data : {
+				fenshu : 0,
+				fenshu2 : 1
+			},
+			methods : {
+				jiafen : function(){
+					this.fenshu ++ ;
+				},
+				jianfen : function(){
+					this.fenshu -- ;
+				},
+				onEnter : function(){
+					this.fenshu = this.fenshu + parseInt(this.fenshu2);
+				}
+			}
+		});
+	</script>
+</body>
+</html>

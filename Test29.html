@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="jquery-1.9.1.js"></script>
+    <title></title>
+</head>
+<body>
+<script>
+    var LazyMan = (function(){
+        var _LazyMan = function(_name){
+            var _this = this;
+            _this.tasks = [];
+            _this.tasks.push(function(){
+                console.log('Hi! This is ' + _name + '!');
+                // 这里的this是window，所以要缓存this
+                _this.next();
+            });
+            setTimeout(function(){
+                _this.next();
+            },0)
+        }
+
+        // push函数里面的this和setTimeout函数里面的this都指向全局作用域，所以要缓存当前this指向
+        //shitf 删除数组第一个值并返回回来
+        _LazyMan.prototype.next = function(){
+            var _fn = this.tasks.shift();
+            _fn && _fn();
+        }
+
+        _LazyMan.prototype.sleep = function(_time){
+            var _this = this;
+            _this.tasks.push(function(){
+                setTimeout(function(){
+                    console.log('Wake up after ' + _time);
+                    _this.next();
+                },_time);
+            });
+            return _this;
+        }
+
+        _LazyMan.prototype.sleepFirst = function(_time){
+            var _this = this;
+            //shitf 向数组的开头添加一个或更多元素，并返回新的长度
+            //unshift() 方法可向数组的开头添加一个或更多元素
+            _this.tasks.unshift(function(){
+                setTimeout(function(){
+                    console.log('Wake up after ' + _time);
+                    _this.next();
+                },_time);
+            });
+            return _this;
+        }
+
+        _LazyMan.prototype.eat = function(_eat){
+            var _this = this;
+            _this.tasks.push(function(){
+                console.log('Eat ' + _eat);
+                _this.next();
+            });
+            return _this;
+        }
+
+        _LazyMan.prototype.doFun = function(fn){
+            var _this = this;
+            _this.tasks.push(function(){
+                Object.prototype.toString.apply(fn) === '[object Function]' && fn();
+                _this.next();
+            });
+            return _this;
+        }
+
+
+        return _LazyMan;
+    })();
+    var lazyMan = new LazyMan('许志勇');
+    lazyMan.doFun(function(){
+        console.log('1');
+    }).sleep(1000).doFun(function(){
+        console.log('2');
+    });
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Vue</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+	<h1>watch 实例</h1>
+	<em>用来监控数据</em>
+	<div id="app">
+		<p>今日温度:{{wendu}}</p>
+		<p>穿衣建议:{{chuanyi}}</p>
+		<p><button @click="shenggao">升高</button></p>
+		<p><button @click="jiangdi">降低</button></p>
+	</div>
+
+	<script type="text/javascript">
+
+		var chuanyiArray = ['T恤','夹克长裙','棉衣羽绒服'];
+		var app = new Vue({
+			el : '#app',
+			data : {
+				wendu : 14,
+				chuanyi : '夹克长裙'
+			},
+			methods : {
+				shenggao : function(){
+					this.wendu += 5;
+				},
+				jiangdi : function(){
+					this.wendu -= 5;
+				}
+			},
+			watch : {
+				//监控温度这个值
+				wendu : function(newVal , oldVal){
+					if(newVal >= 26){
+						this.chuanyi = chuanyiArray[0];
+					}
+					else if(newVal < 26 && newVal > 0){
+						this.chuanyi = chuanyiArray[1];
+					}
+					else{
+						this.chuanyi = chuanyiArray[2];
+					}
+				}
+			}
+			
+		});
+
+		//定义在外部的方式
+		//app.$watch('watch',function(newVal,oldVal){
+			//......
+		//});
+
+
+	
+
+	</script>
+</body>
+</html>

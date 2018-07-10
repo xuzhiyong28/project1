@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>动态加载js文件</title>
+    <script src="js/lazyLoad.js"></script>
+</head>
+
+<body>
+<input type="button" id="btn" value="提交"/>
+<script>
+    //动态加载js脚本
+    var jsLoder = {
+        Browser: {
+            ie: /msie/.test(window.navigator.userAgent.toLowerCase()),
+            moz: /gecko/.test(window.navigator.userAgent.toLowerCase()),
+            opera: /opera/.test(window.navigator.userAgent.toLowerCase()),
+            safari: /safari/.test(window.navigator.userAgent.toLowerCase())
+        },
+        load : function(jsUrl , fnCallBack){
+            var _script = document.createElement('script');
+            _script.setAttribute('type','text/javascript');
+            _script.setAttribute('src',jsUrl);
+            //这里是插入到了head下面。也可以根据document.getElementsByTagName('script') 获取srcipt的索引，插入到最后一个
+            //var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(_script, s); 插入到body的第一个
+            document.getElementsByTagName('head')[0].appendChild(_script);
+            if(jsLoder.Browser.ie){
+                _script.onreadystatechange = function(){
+                    if(typeof fnCallBack === 'function')
+                            fnCallBack();
+                }
+            }
+            else if(jsLoder.Browser.moz){
+                _script.onload = function(){
+                    if(typeof fnCallBack === 'function')
+                        fnCallBack();
+                }
+            }
+            else{
+                if(typeof fnCallBack === 'function')
+                    fnCallBack();
+            }
+        }
+    }
+
+
+
+    /**
+     * 使用自己写的插件加载
+     */
+    jsLoder.load('http://libs.baidu.com/jquery/1.9.1/jquery.min.js',function(){
+       if(window.jQuery){
+           $("#btn").unbind('click').bind('click',function(){
+               var _this = $(this);
+               alert(_this.val());
+           });
+       }
+    });
+
+    /**
+     * 使用LazyLoad插件加载
+     */
+    LazyLoad.js(['http://libs.baidu.com/jquery/1.9.1/jquery.min.js'],function(){
+        alert(window.jQuery);
+    });
+
+
+
+</script>
+</body>
+</html>

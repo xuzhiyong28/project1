@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>类式继承</title>
+</head>
+<body>
+<div id="dhDiv" style="width: 400px;height: 200px;border: 1px solid #c40d0e;">
+    <p style="text-align: center">单行编辑框</p>
+</div>
+<div id="dhsDiv" style="width: 400px;height: 200px;border: 1px solid #c40d0e;">
+    <p style="text-align: center">多行编辑框</p>
+</div>
+
+
+<script src="Interface.js"></script>
+<script>
+    //就地编辑的类 单行
+    function EditInPlaceField(id, parent, value) {
+        this.id = id;
+        this.value = value || "default value";
+        this.parentElement = parent;
+    }
+    EditInPlaceField.prototype = {
+        createElements: function () {
+            this.containerElement = document.createElement('div');
+            this.parentElement.appendChild(this.containerElement);
+
+            //span显示框
+            this.staticElement = document.createElement('span');
+            this.staticElement.innerHTML = this.value;
+            this.containerElement.appendChild(this.staticElement);
+
+            //input编辑框
+            this.fieldElement = document.createElement('input');
+            this.fieldElement.type = 'text';
+            this.fieldElement.value = this.value;
+            this.containerElement.appendChild(this.fieldElement);
+
+            //保存按钮
+            this.saveButton = document.createElement('input');
+            this.saveButton.type = 'button';
+            this.saveButton.value = 'Save';
+            this.containerElement.appendChild(this.saveButton);
+
+            this.cancelButton = document.createElement('input');
+            this.cancelButton.type = 'button';
+            this.cancelButton.value = 'cancel';
+            this.containerElement.appendChild(this.cancelButton);
+            this.convertTotext();
+        },
+        attachEvents: function () {
+            var _that = this; // 这里要用_that存起来，因为下面用到事件，在click回调事件里面，this的作用域已经是staticElement了
+            this.addEvent(this.staticElement, 'click', function () {
+                var kkk = this;  // 下面如果用this.converToEditable就有问题了，因为this指向的是staticElement
+                _that.converToEditable();
+            });
+
+            this.addEvent(this.cancelButton, 'click', function () {
+                _that.cancelClick();
+            });
+
+            this.addEvent(this.saveButton, 'click', function () {
+                _that.saveClcik();
+            });
+
+        },
+
+        addEvent: function (element, type, handler) {
+            if (element.addEventListener) {
+                element.addEventListener(type, handler, false);
+            } else if (element.attachEvent) {
+                element.attachEvent("on" + type, handler);
+            } else {
+                element["on" + type] = handler;
+            }
+        },
+
+        //初始化显示
+        convertTotext: function () {
+            this.fieldElement.style.display = 'none';
+            this.saveButton.style.display = 'none';
+            this.cancelButton.style.display = 'none';
+            this.staticElement.style.display = 'inline';
+            this.setValue(this.value);
+        },
+
+        //点击span触发的事件
+        converToEditable: function () {
+            this.fieldElement.style.display = 'inline';
+            this.saveButton.style.display = 'inline';
+            this.cancelButton.style.display = 'inline';
+            this.staticElement.style.display = 'none';
+        },
+
+        saveClcik: function () {
+            this.cancelClick();
+            this.staticElement.innerHTML = this.fieldElement.value;
+        },
+
+        //取消按钮click
+        cancelClick: function () {
+            this.staticElement.style.display = 'inline';
+            this.fieldElement.style.display = 'none';
+            this.saveButton.style.display = 'none';
+            this.cancelButton.style.display = 'none';
+        },
+
+        //设置value值
+        setValue: function (value) {
+            this.fieldElement.value = value;
+            this.staticElement.value = value;
+        },
+
+        //获取编辑框的值
+        getValue: function () {
+            return this.fieldElement.value;
+        }
+    }
+    var editInPlaceField = new EditInPlaceField("xzy", document.getElementById('dhDiv'), "单行就地编辑");
+    editInPlaceField.createElements();
+    editInPlaceField.attachEvents();
+
+
+    //就地编辑 多行
+    function EditInPlaceFieldArea(id, parent, value) {
+        EditInPlaceField.call(this, id, parent, value);
+    }
+    extend(EditInPlaceFieldArea,EditInPlaceField);
+    EditInPlaceFieldArea.prototype.createElements = function(){
+        this.containerElement = document.createElement('div');
+        this.parentElement.appendChild(this.containerElement);
+
+
+        this.staticElement = document.createElement('p');
+        this.containerElement.appendChild(this.staticElement);
+        this.staticElement.innerHTML = this.value;
+
+        this.fieldElement = document.createElement('textarea');
+        this.fieldElement.value = this.value;
+        this.containerElement.appendChild(this.fieldElement);
+
+        //保存按钮
+        this.saveButton = document.createElement('input');
+        this.saveButton.type = 'button';
+        this.saveButton.value = 'Save';
+        this.containerElement.appendChild(this.saveButton);
+
+        //取消按钮
+        this.cancelButton = document.createElement('input');
+        this.cancelButton.type = 'button';
+        this.cancelButton.value = 'cancel';
+        this.containerElement.appendChild(this.cancelButton);
+        this.convertTotext();
+    };
+
+    var editInPlaceFieldArea = new EditInPlaceFieldArea("xzyDh",document.getElementById('dhsDiv'),"多行就地编辑");
+    editInPlaceFieldArea.createElements();
+</script>
+</body>
+</html>

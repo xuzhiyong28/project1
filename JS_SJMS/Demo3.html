@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>原型式继承</title>
+</head>
+<body>
+<script src="Interface.js"></script>
+<script>
+    //原型方式继承没有使用构造函数，采用一个configure方法来构建
+    var Person = {
+        configure: function (name, age, message) {
+            this.name = name;
+            this.age = age;
+            this.message = message;
+        },
+        showPersonMsg: function () {
+            console.log("name = " + this.name);
+            console.log("age = " + this.age);
+            console.log("message = " + this.message);
+        }
+    }
+    var p = clone(Person);
+    p.configure("许志勇", "18", "哈哈");
+    p.showPersonMsg();
+</script>
+</body>
+</html>

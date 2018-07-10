@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+<title>js事件的高级写法</title>
+<head>
+    <style>
+        body{
+            margin : 30px;
+        }
+        .container{
+            border : 1px solid black;
+            width : 200px;
+            height :200px;
+        }
+    </style>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        //全选按钮模块
+        var SelectAll = (function($){
+            //构造函数
+            var fn = function(config){
+                //渲染位置
+                this.renderTo = config.renderTo || 'body';
+                //自定义事件或者说监听函数（其实就是回调函数）
+                this.listeners = {
+                    'onSelectAll' : null
+                }
+                //复制参数传进来的listeners 到this.listeners中
+                if(typeof config.listeners == 'object'){
+                    for(var attr in config.listeners){
+                        if(attr in this.listeners){
+                            this.listeners[attr] = config.listeners[attr];
+                        }
+                    }
+                }
+                //初始化操作
+                this.init();
+            };
+            fn.prototype = {
+                init : function(){
+                    var self = this;
+                    //创建元素
+                    this.$input = $('<input type="checkbox" />').appendTo($(this.renderTo));
+                    //添加原生事件
+                    this.$input.click(function(){
+                        //触发自定义事件
+                        if(typeof self.listeners.onSelectAll == 'function'){
+                            self.listeners.onSelectAll(this.checked);
+                        }
+                    });
+                },
+                otherFn : function(){
+                    alert("另外一个方法");
+                }
+            };
+            //返回构造函数
+            return fn;
+        })(jQuery);
+    </script>
+    <script>
+        //add模块
+        var Add = (function($){
+            var fn = function(config){
+                this.renderTo = config.renderTo || 'body';
+                this.listeners = {
+                    'onAdd' : null
+                }
+                if(typeof config.listeners == 'object'){
+                    for(var attr in config.listeners){
+                        if(attr in this.listeners){
+                            this.listeners[attr] = config.listeners[attr];
+                        }
+                    }
+                }
+                this.init();
+            };
+            fn.prototype = {
+                init : function(){
+                    var self = this;
+                    this.$add = $('<button>add</button>').appendTo($(this.renderTo));
+                    this.$add.click(function(){
+                        if(typeof self.listeners.onAdd == 'function'){
+                            self.listeners.onAdd();
+                        }
+                    });
+                }
+            };
+            return fn;
+        })(jQuery);
+    </script>
+    <script>
+        //container模块
+        var Container = (function($){
+            var fn = function(config){
+                this.renderTo = config.renderTo || 'body';
+                //可以初始化时添加一些checkbox进来
+                //this.items = [];或者 this.itemsNum = config.itesNum; 后面逻辑也不写了
+                this.init();
+            };
+            fn.prototype = {
+                init : function(){
+                    var self = this;
+                    this.$container = $('<div></div>').addClass('container').appendTo($(this.renderTo));
+                },
+                add : function(checked){
+                    if(checked){
+                        $('<input type="checkbox" checked="checked" />').appendTo(this.$container);
+                    }else{
+                        $('<input type="checkbox" />').appendTo(this.$container);
+                    }
+                },
+                selectOrCacelAll : function(checked){
+                    if(checked){
+                        this.$container.find(':checkbox').prop('checked',true);
+                    }else{
+                        this.$container.find(':checkbox').prop('checked',false);
+                    }
+                }
+            };
+            return fn;
+        })(jQuery);
+    </script>
+    <script>
+        //controller逻辑层（可以写成类）
+        $(function(){
+            //controller缓存的，也可以写到container里面去
+            var checked = false;
+            //selectAll实例
+            var selectAll = new SelectAll({
+                listeners : {
+                    onSelectAll :function(flag){
+                        checked = flag;
+                        container.selectOrCacelAll(flag);
+                    }
+                }
+            });
+            //add实例
+            var add = new Add({
+                listeners : {
+                    onAdd : function(){
+                        container.add(checked);
+                    }
+                }
+            });
+            //container实例
+            var container = new Container({});
+
+        });
+    </script>
+</head>
+<body>
+
+</body>
+
+<script>
+    /*javasrcipt模块编程*/
+    var xyjzkh = (function($ , mod){
+
+        mod.name = mod.name || 'xyjzkh';
+
+        mod.fn1 = function(){
+
+        }
+
+        return mod;
+    })(jQuery, window.xyjzkh || {});
+
+</script>
+
+
+</html>
